@@ -37,11 +37,7 @@
             flex-wrap: wrap;
         }
 
-        .user-info {
-            font-size: 0.75rem;
-            color: #888;
-            margin-right: 0.5rem;
-        }
+        .user-info { font-size: 0.75rem; color: #888; margin-right: 0.5rem; }
 
         button {
             background: #2a2a2a;
@@ -86,7 +82,7 @@
         .modal h2 { color: #39ff14; font-size: 1rem; margin-bottom: 1rem; }
         .modal label { display: block; font-size: 0.8rem; color: #999; margin-bottom: 0.2rem; margin-top: 0.6rem; }
 
-        .modal input, .modal textarea {
+        .modal input, .modal textarea, .modal select {
             width: 100%;
             padding: 0.5rem;
             background: #1a1a1a;
@@ -97,7 +93,7 @@
             font-family: inherit;
         }
 
-        .modal input:focus, .modal textarea:focus { outline: none; border-color: #39ff14; }
+        .modal input:focus, .modal textarea:focus, .modal select:focus { outline: none; border-color: #39ff14; }
         .modal textarea { resize: vertical; min-height: 80px; }
 
         .modal-buttons {
@@ -116,12 +112,32 @@
 
         .btn-save:hover { background: #2ecc0f; color: #000; }
 
-        .search-bar { margin-bottom: 1rem; }
+        .btn-warn {
+            background: #ff4444;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-warn:hover { background: #cc0000; }
+
+        /* SEARCH BAR */
+        .search-section {
+            background: #222;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 0.6rem;
+        }
 
         .search-bar input {
             width: 100%;
-            padding: 0.5rem 0.8rem;
-            background: #222;
+            padding: 0.5rem 0.8rem 0.5rem 2.2rem;
+            background: #1a1a1a;
             border: 1px solid #2a2a2a;
             border-radius: 6px;
             color: #e0e0e0;
@@ -129,6 +145,82 @@
         }
 
         .search-bar input:focus { outline: none; border-color: #c8b800; }
+
+        .search-icon {
+            position: absolute;
+            left: 0.7rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            pointer-events: none;
+        }
+
+        .search-shortcut {
+            position: absolute;
+            right: 0.6rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            color: #555;
+            background: #2a2a2a;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            pointer-events: none;
+        }
+
+        .search-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-controls select {
+            padding: 0.3rem 0.5rem;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 5px;
+            color: #c8b800;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .search-controls select:focus { outline: none; border-color: #39ff14; }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.5rem;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #c8b800;
+            cursor: pointer;
+        }
+
+        .filter-chip:hover { border-color: #39ff14; }
+        .filter-chip.active { background: #c8b800; color: #1a1a1a; border-color: #c8b800; }
+
+        /* BULK ACTIONS BAR */
+        .bulk-bar {
+            display: none;
+            position: sticky;
+            top: 0;
+            background: #2a2a2a;
+            border: 1px solid #c8b800;
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.6rem;
+            z-index: 50;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .bulk-bar.active { display: flex; }
+        .bulk-count { color: #39ff14; font-weight: bold; font-size: 0.9rem; margin-right: auto; }
 
         .section-label {
             font-size: 0.75rem;
@@ -139,6 +231,36 @@
             margin-top: 0.8rem;
         }
 
+        .folder-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #39ff14;
+            margin-top: 1rem;
+            margin-bottom: 0.4rem;
+            padding: 0.3rem 0.5rem;
+            background: #1f1f1f;
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            border-left: 3px solid transparent;
+        }
+
+        .folder-header:hover { background: #252525; }
+        .folder-arrow { transition: transform 0.2s; font-size: 0.7rem; }
+        .folder-header.collapsed .folder-arrow { transform: rotate(-90deg); }
+        .folder-count { color: #666; font-size: 0.75rem; margin-left: auto; }
+
+        .folder-edit-btn {
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            background: transparent;
+            border: 1px solid transparent;
+        }
+
+        .folder-edit-btn:hover { border-color: #c8b800; }
+
         .link-card {
             display: flex;
             align-items: center;
@@ -148,14 +270,22 @@
             border-radius: 8px;
             padding: 0.6rem 0.8rem;
             margin-bottom: 0.4rem;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background 0.2s;
         }
 
         .link-card:hover { border-color: #39ff14; }
         .link-card.pinned { border-left: 3px solid #c8b800; }
+        .link-card.selected { background: #2a2f2a; border-color: #39ff14; }
+
+        .link-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #39ff14;
+            flex-shrink: 0;
+        }
 
         .link-favicon { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; }
-
         .link-info { flex: 1; min-width: 0; }
 
         .link-name {
@@ -174,11 +304,40 @@
         .link-note { font-size: 0.7rem; color: #888; margin-top: 0.15rem; }
         .link-added-by { font-size: 0.65rem; color: #555; margin-top: 0.1rem; font-style: italic; }
 
+        .folder-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            font-size: 0.7rem;
+            padding: 0.05rem 0.4rem;
+            border-radius: 8px;
+            margin-left: 0.3rem;
+        }
+
+        .link-tags {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.25rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.65rem;
+            background: #2a2a2a;
+            color: #c8b800;
+            padding: 0.1rem 0.4rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .tag:hover { background: #c8b800; color: #1a1a1a; }
+
         .link-actions { display: flex; gap: 0.3rem; flex-shrink: 0; }
         .link-actions button { padding: 0.2rem 0.4rem; font-size: 0.75rem; }
 
         .btn-pin { color: #c8b800; }
         .btn-pin.active { color: #1a1a1a; background: #c8b800; }
+        .btn-edit { color: #888; }
         .btn-delete { color: #ff4444; }
         .btn-delete:hover { border-color: #ff4444; }
 
@@ -207,12 +366,10 @@
         }
 
         .btn-login:hover { background: #2ecc0f; color: #000; }
-
         .hidden { display: none !important; }
-
         .loading { text-align: center; color: #666; padding: 2rem; }
 
-        /* LOG ENTRIES */
+        /* LOG */
         .log-entry {
             padding: 0.5rem 0.7rem;
             background: #1a1a1a;
@@ -221,24 +378,59 @@
             margin-bottom: 0.4rem;
             font-size: 0.8rem;
         }
-
         .log-entry.added { border-left-color: #39ff14; }
         .log-entry.deleted { border-left-color: #ff4444; }
-        .log-entry.pinned { border-left-color: #c8b800; }
-
-        .log-action {
-            color: #e0e0e0;
-            font-weight: 500;
-        }
-
-        .log-meta {
-            font-size: 0.7rem;
-            color: #666;
-            margin-top: 0.2rem;
-        }
-
+        .log-entry.pinned, .log-entry.unpinned { border-left-color: #c8b800; }
+        .log-entry.edited { border-left-color: #4499ff; }
+        .log-action { color: #e0e0e0; font-weight: 500; }
+        .log-meta { font-size: 0.7rem; color: #666; margin-top: 0.2rem; }
         .log-user { color: #c8b800; }
         .log-link { color: #39ff14; }
+
+        .hint { font-size: 0.7rem; color: #555; margin-top: 0.3rem; }
+
+        kbd {
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 3px;
+            padding: 0.05rem 0.3rem;
+            font-size: 0.7rem;
+            color: #c8b800;
+        }
+
+        /* COLOR PICKER */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.4rem;
+            margin-top: 0.3rem;
+        }
+
+        .color-swatch {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.1s;
+        }
+
+        .color-swatch:hover { transform: scale(1.1); }
+        .color-swatch.selected { border-color: #fff; }
+
+        /* DUPLICATE WARNING */
+        .duplicate-warning {
+            background: #3a2a1a;
+            border: 1px solid #c8b800;
+            color: #ffd700;
+            padding: 0.5rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .duplicate-warning.active { display: block; }
     </style>
 </head>
 <body>
@@ -264,8 +456,42 @@
         </div>
     </header>
 
-    <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search links..." oninput="renderLinks()">
+    <div class="search-section">
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Fuzzy search by name, URL, note, tag, folder, or user..." oninput="renderLinks()">
+            <span class="search-shortcut">/</span>
+        </div>
+        <div class="search-controls">
+            <select id="sortSelect" onchange="renderLinks()">
+                <option value="newest">↓ Newest first</option>
+                <option value="oldest">↑ Oldest first</option>
+                <option value="az">A → Z</option>
+                <option value="za">Z → A</option>
+                <option value="folder">By folder</option>
+            </select>
+            <select id="folderFilter" onchange="renderLinks()">
+                <option value="">📁 All folders</option>
+            </select>
+            <select id="userFilter" onchange="renderLinks()">
+                <option value="">👤 All users</option>
+            </select>
+            <span class="filter-chip" id="pinnedFilter" onclick="togglePinnedFilter()">⭐ Pinned only</span>
+            <span class="filter-chip" id="selectModeBtn" onclick="toggleSelectMode()">☑️ Select</span>
+            <span class="filter-chip" onclick="clearAllFilters()" style="color:#ff4444;">✕ Clear</span>
+        </div>
+        <div id="activeTagFilter"></div>
+    </div>
+
+    <!-- BULK ACTIONS BAR -->
+    <div class="bulk-bar" id="bulkBar">
+        <span class="bulk-count" id="bulkCount">0 selected</span>
+        <button onclick="bulkSelectAll()">Select All Visible</button>
+        <button onclick="bulkClearSelection()">Clear Selection</button>
+        <button onclick="bulkMoveToFolder()">📁 Move to folder</button>
+        <button onclick="bulkAddTag()">🏷️ Add tag</button>
+        <button onclick="bulkPin()">⭐ Pin/Unpin</button>
+        <button class="btn-warn" onclick="bulkDelete()">✕ Delete selected</button>
     </div>
 
     <div id="linkContainer">
@@ -273,14 +499,21 @@
     </div>
 </div>
 
-<!-- SINGLE ADD MODAL -->
+<!-- ADD/EDIT MODAL -->
 <div class="modal-overlay" id="singleModal">
     <div class="modal">
-        <h2>Add a Link</h2>
+        <h2 id="singleModalTitle">Add a Link</h2>
+        <input type="hidden" id="editingId">
         <label>Name</label>
         <input type="text" id="linkName" placeholder="e.g. GitHub">
         <label>URL</label>
-        <input type="text" id="linkURL" placeholder="e.g. https://github.com">
+        <input type="text" id="linkURL" placeholder="e.g. https://github.com" oninput="checkDuplicate()">
+        <div class="duplicate-warning" id="duplicateWarning"></div>
+        <label>Folder (optional)</label>
+        <input type="text" id="linkFolder" placeholder="e.g. Work, School, Tools" list="folderList">
+        <datalist id="folderList"></datalist>
+        <label>Tags (optional, comma separated)</label>
+        <input type="text" id="linkTags" placeholder="e.g. dev, learning, important">
         <label>Note (optional)</label>
         <input type="text" id="linkNote" placeholder="e.g. My repos">
         <div class="modal-buttons">
@@ -294,8 +527,15 @@
 <div class="modal-overlay" id="massModal">
     <div class="modal">
         <h2>Mass Add Links</h2>
-        <label>One per line — format: <code style="color:#39ff14;">Name | URL</code> or just <code style="color:#39ff14;">URL</code></label>
-        <textarea id="massInput" placeholder="GitHub | https://github.com&#10;https://stackoverflow.com&#10;Reddit | https://reddit.com"></textarea>
+        <label>One per line — formats:</label>
+        <div class="hint">
+            <code style="color:#39ff14;">Name | URL</code><br>
+            <code style="color:#39ff14;">Name | URL | Folder</code><br>
+            <code style="color:#39ff14;">Name | URL | Folder | tag1,tag2</code><br>
+            Or just <code style="color:#39ff14;">URL</code>
+        </div>
+        <textarea id="massInput" placeholder="GitHub | https://github.com | Tools | dev,code&#10;https://stackoverflow.com&#10;Reddit | https://reddit.com | Fun"></textarea>
+        <div class="hint">Duplicate URLs will be skipped automatically.</div>
         <div class="modal-buttons">
             <button onclick="closeModals()">Cancel</button>
             <button class="btn-save" onclick="massSave()">Save All</button>
@@ -307,11 +547,22 @@
 <div class="modal-overlay" id="logModal">
     <div class="modal">
         <h2>📜 Activity Log <span style="color:#666; font-size:0.75rem; font-weight:normal;">(last 7 days)</span></h2>
-        <div id="logContainer">
-            <div class="loading">Loading log...</div>
-        </div>
+        <div id="logContainer"><div class="loading">Loading log...</div></div>
         <div class="modal-buttons">
             <button onclick="closeModals()">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- FOLDER COLOR MODAL -->
+<div class="modal-overlay" id="folderColorModal">
+    <div class="modal">
+        <h2>📁 Folder: <span id="folderColorName" style="color:#fff;"></span></h2>
+        <label>Pick a color</label>
+        <div class="color-grid" id="colorGrid"></div>
+        <div class="modal-buttons">
+            <button onclick="closeModals()">Cancel</button>
+            <button class="btn-save" onclick="saveFolderColor()">Save</button>
         </div>
     </div>
 </div>
@@ -322,7 +573,7 @@
         getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { 
-        getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, 
+        getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, setDoc,
         onSnapshot, query, orderBy, where, getDocs 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -342,17 +593,28 @@
 
     let links = [];
     let logs = [];
+    let folderColors = {}; // { folderName: '#hex' }
     let currentUser = null;
+    let pinnedOnly = false;
+    let activeTag = '';
+    let selectMode = false;
+    let selectedIds = new Set();
+    let folderColorTarget = '';
+    let pendingColor = '';
+    const collapsedFolders = new Set();
 
     const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
+    const COLORS = [
+        '#39ff14', '#c8b800', '#ff4444', '#4499ff', '#ff8800', 
+        '#bb44ff', '#44ffcc', '#ff44aa', '#888888', '#cc6600',
+        '#00aa66', '#aa0066', '#0066aa', '#aaaa00', '#660066', '#006666'
+    ];
+
     // === AUTH ===
     window.signIn = async () => {
-        try {
-            await signInWithPopup(auth, provider);
-        } catch (err) {
-            document.getElementById('loginError').textContent = err.message;
-        }
+        try { await signInWithPopup(auth, provider); }
+        catch (err) { document.getElementById('loginError').textContent = err.message; }
     };
 
     window.signOutUser = () => signOut(auth);
@@ -365,6 +627,7 @@
             document.getElementById('userInfo').textContent = user.email;
             listenToLinks();
             listenToLogs();
+            listenToFolders();
             cleanOldLogs();
         } else {
             currentUser = null;
@@ -377,15 +640,10 @@
     async function addLog(action, linkName, linkUrl) {
         try {
             await addDoc(collection(db, 'logs'), {
-                action,             // 'added', 'deleted', 'pinned', 'unpinned'
-                linkName: linkName || '',
-                linkUrl: linkUrl || '',
-                user: currentUser.email,
-                timestamp: Date.now()
+                action, linkName: linkName || '', linkUrl: linkUrl || '',
+                user: currentUser.email, timestamp: Date.now()
             });
-        } catch (err) {
-            console.error('Log failed:', err);
-        }
+        } catch (err) { console.error('Log failed:', err); }
     }
 
     async function cleanOldLogs() {
@@ -393,11 +651,8 @@
             const cutoff = Date.now() - ONE_WEEK_MS;
             const oldLogsQuery = query(collection(db, 'logs'), where('timestamp', '<', cutoff));
             const snap = await getDocs(oldLogsQuery);
-            const deletions = snap.docs.map(d => deleteDoc(doc(db, 'logs', d.id)));
-            await Promise.all(deletions);
-        } catch (err) {
-            console.error('Log cleanup failed:', err);
-        }
+            await Promise.all(snap.docs.map(d => deleteDoc(doc(db, 'logs', d.id))));
+        } catch (err) { console.error('Log cleanup failed:', err); }
     }
 
     function listenToLogs() {
@@ -410,11 +665,6 @@
 
     function renderLogs() {
         const container = document.getElementById('logContainer');
-        if (logs.length === 0) {
-            container.innerHTML = `<div class="empty-state">No activity yet.</div>`;
-            return;
-        }
-
         const cutoff = Date.now() - ONE_WEEK_MS;
         const recent = logs.filter(l => l.timestamp >= cutoff);
 
@@ -434,6 +684,7 @@
             else if (l.action === 'deleted') actionText = `deleted <span class="log-link">${escapeHtml(l.linkName)}</span>`;
             else if (l.action === 'pinned') actionText = `pinned <span class="log-link">${escapeHtml(l.linkName)}</span>`;
             else if (l.action === 'unpinned') actionText = `unpinned <span class="log-link">${escapeHtml(l.linkName)}</span>`;
+            else if (l.action === 'edited') actionText = `edited <span class="log-link">${escapeHtml(l.linkName)}</span>`;
             else actionText = l.action;
 
             return `
@@ -450,16 +701,139 @@
         }[c]));
     }
 
-    // === FIRESTORE LINKS ===
+    // === FOLDERS (colors) ===
+    function listenToFolders() {
+        onSnapshot(collection(db, 'folders'), snapshot => {
+            folderColors = {};
+            snapshot.docs.forEach(d => {
+                folderColors[d.id] = d.data().color;
+            });
+            renderLinks();
+        });
+    }
+
+    async function setFolderColor(folder, color) {
+        try {
+            await setDoc(doc(db, 'folders', folder), { color });
+        } catch (err) { alert('Error: ' + err.message); }
+    }
+
+    window.openFolderColorModal = (folder) => {
+        folderColorTarget = folder;
+        pendingColor = folderColors[folder] || COLORS[0];
+        document.getElementById('folderColorName').textContent = folder;
+        const grid = document.getElementById('colorGrid');
+        grid.innerHTML = COLORS.map(c => 
+            `<div class="color-swatch ${c === pendingColor ? 'selected' : ''}" 
+                  style="background:${c};" 
+                  onclick="selectColor('${c}')"></div>`
+        ).join('');
+        document.getElementById('folderColorModal').classList.add('active');
+    };
+
+    window.selectColor = (color) => {
+        pendingColor = color;
+        document.querySelectorAll('.color-swatch').forEach(el => {
+            el.classList.toggle('selected', el.style.backgroundColor === hexToRgb(color));
+        });
+    };
+
+    function hexToRgb(hex) {
+        const r = parseInt(hex.slice(1,3), 16);
+        const g = parseInt(hex.slice(3,5), 16);
+        const b = parseInt(hex.slice(5,7), 16);
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    window.saveFolderColor = async () => {
+        if (folderColorTarget && pendingColor) {
+            await setFolderColor(folderColorTarget, pendingColor);
+        }
+        closeModals();
+    };
+
+    // === DUPLICATE DETECTION ===
+    function normalizeUrl(url) {
+        try {
+            const u = new URL(ensureProtocol(url));
+            return (u.hostname + u.pathname).toLowerCase().replace(/\/$/, '');
+        } catch { return url.toLowerCase().trim(); }
+    }
+
+    function findDuplicate(url, excludeId) {
+        const norm = normalizeUrl(url);
+        return links.find(l => l.id !== excludeId && normalizeUrl(l.url) === norm);
+    }
+
+    window.checkDuplicate = () => {
+        const url = document.getElementById('linkURL').value.trim();
+        const editingId = document.getElementById('editingId').value;
+        const warningEl = document.getElementById('duplicateWarning');
+        if (!url) { warningEl.classList.remove('active'); return; }
+        const dup = findDuplicate(url, editingId);
+        if (dup) {
+            warningEl.innerHTML = `⚠️ This link already exists as <strong>${escapeHtml(dup.name)}</strong> (added by ${escapeHtml(dup.addedBy || 'unknown')})`;
+            warningEl.classList.add('active');
+        } else {
+            warningEl.classList.remove('active');
+        }
+    };
+
+    // === FUZZY SEARCH ===
+    function fuzzyMatch(query, text) {
+        if (!query) return true;
+        query = query.toLowerCase();
+        text = text.toLowerCase();
+        if (text.includes(query)) return true;
+        let qi = 0;
+        for (let i = 0; i < text.length && qi < query.length; i++) {
+            if (text[i] === query[qi]) qi++;
+        }
+        return qi === query.length;
+    }
+
+    function matchesSearch(link, q) {
+        if (!q) return true;
+        const fields = [
+            link.name, link.url, link.note || '',
+            link.folder || '', link.addedBy || '',
+            (link.tags || []).join(' ')
+        ];
+        return fields.some(f => fuzzyMatch(q, f));
+    }
+
+    // === LINKS ===
     function listenToLinks() {
         const q = query(collection(db, 'links'), orderBy('created', 'desc'));
         onSnapshot(q, snapshot => {
             links = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            updateFilterDropdowns();
             renderLinks();
         }, err => {
             document.getElementById('linkContainer').innerHTML = 
                 `<div class="empty-state" style="color:#ff4444;">Error: ${err.message}</div>`;
         });
+    }
+
+    function updateFilterDropdowns() {
+        const folders = [...new Set(links.map(l => l.folder).filter(Boolean))].sort();
+        const users = [...new Set(links.map(l => l.addedBy).filter(Boolean))].sort();
+
+        const folderFilter = document.getElementById('folderFilter');
+        const currentFolder = folderFilter.value;
+        folderFilter.innerHTML = `<option value="">📁 All folders</option>` +
+            `<option value="__none__">📁 No folder</option>` +
+            folders.map(f => `<option value="${escapeHtml(f)}">📁 ${escapeHtml(f)}</option>`).join('');
+        folderFilter.value = currentFolder;
+
+        const userFilter = document.getElementById('userFilter');
+        const currentUserVal = userFilter.value;
+        userFilter.innerHTML = `<option value="">👤 All users</option>` +
+            users.map(u => `<option value="${escapeHtml(u)}">👤 ${escapeHtml(u)}</option>`).join('');
+        userFilter.value = currentUserVal;
+
+        const folderList = document.getElementById('folderList');
+        folderList.innerHTML = folders.map(f => `<option value="${escapeHtml(f)}">`).join('');
     }
 
     function getDomain(url) {
@@ -477,26 +851,53 @@
         return url;
     }
 
-    window.openModal = type => {
-        if (type === 'single') document.getElementById('singleModal').classList.add('active');
+    function parseTags(str) {
+        return str.split(',').map(t => t.trim()).filter(Boolean);
+    }
+
+    window.openModal = (type, linkId) => {
+        if (type === 'single') {
+            const titleEl = document.getElementById('singleModalTitle');
+            if (linkId) {
+                const link = links.find(l => l.id === linkId);
+                if (link) {
+                    titleEl.textContent = 'Edit Link';
+                    document.getElementById('editingId').value = linkId;
+                    document.getElementById('linkName').value = link.name || '';
+                    document.getElementById('linkURL').value = link.url || '';
+                    document.getElementById('linkFolder').value = link.folder || '';
+                    document.getElementById('linkTags').value = (link.tags || []).join(', ');
+                    document.getElementById('linkNote').value = link.note || '';
+                }
+            } else {
+                titleEl.textContent = 'Add a Link';
+                document.getElementById('editingId').value = '';
+            }
+            document.getElementById('duplicateWarning').classList.remove('active');
+            document.getElementById('singleModal').classList.add('active');
+        }
         if (type === 'mass') document.getElementById('massModal').classList.add('active');
         if (type === 'log') {
             document.getElementById('logModal').classList.add('active');
-            cleanOldLogs(); // clean on open too
+            cleanOldLogs();
         }
     };
 
     window.closeModals = () => {
         document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-        ['linkName','linkURL','linkNote','massInput'].forEach(id => {
+        ['linkName','linkURL','linkNote','linkFolder','linkTags','massInput','editingId'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';
         });
+        document.getElementById('duplicateWarning').classList.remove('active');
     };
 
     window.saveLink = async () => {
+        const editingId = document.getElementById('editingId').value;
         const name = document.getElementById('linkName').value.trim();
         const rawUrl = document.getElementById('linkURL').value.trim();
+        const folder = document.getElementById('linkFolder').value.trim();
+        const tags = parseTags(document.getElementById('linkTags').value);
         const note = document.getElementById('linkNote').value.trim();
 
         if (!rawUrl) return alert('URL is required.');
@@ -504,15 +905,26 @@
         const url = ensureProtocol(rawUrl);
         const finalName = name || getDomain(url) || url;
 
+        // Duplicate check (warn, don't block — user might want it anyway)
+        const dup = findDuplicate(url, editingId);
+        if (dup && !editingId) {
+            if (!confirm(`This link already exists as "${dup.name}". Add anyway?`)) return;
+        }
+
         try {
-            await addDoc(collection(db, 'links'), {
-                name: finalName,
-                url, note,
-                pinned: false,
-                created: Date.now(),
-                addedBy: currentUser.email
-            });
-            await addLog('added', finalName, url);
+            if (editingId) {
+                await updateDoc(doc(db, 'links', editingId), {
+                    name: finalName, url, folder, tags, note
+                });
+                await addLog('edited', finalName, url);
+            } else {
+                await addDoc(collection(db, 'links'), {
+                    name: finalName, url, folder, tags, note,
+                    pinned: false, created: Date.now(),
+                    addedBy: currentUser.email
+                });
+                await addLog('added', finalName, url);
+            }
             closeModals();
         } catch (err) { alert('Error: ' + err.message); }
     };
@@ -522,28 +934,37 @@
         if (!raw) return;
 
         const lines = raw.split('\n').filter(l => l.trim());
+        let added = 0, skipped = 0;
         try {
             for (const line of lines) {
-                let name = '', url = '';
-                if (line.includes('|')) {
-                    const parts = line.split('|');
-                    name = parts[0].trim();
-                    url = parts.slice(1).join('|').trim();
+                const parts = line.split('|').map(p => p.trim());
+                let name = '', url = '', folder = '', tags = [];
+
+                if (parts.length === 1) {
+                    url = parts[0];
                 } else {
-                    url = line.trim();
+                    name = parts[0];
+                    url = parts[1] || '';
+                    folder = parts[2] || '';
+                    tags = parts[3] ? parseTags(parts[3]) : [];
                 }
+
+                if (!url) continue;
                 url = ensureProtocol(url);
                 name = name || getDomain(url) || url;
 
+                if (findDuplicate(url)) { skipped++; continue; }
+
                 await addDoc(collection(db, 'links'), {
-                    name, url, note: '',
-                    pinned: false,
-                    created: Date.now(),
+                    name, url, folder, tags, note: '',
+                    pinned: false, created: Date.now(),
                     addedBy: currentUser.email
                 });
                 await addLog('added', name, url);
+                added++;
             }
             closeModals();
+            if (skipped > 0) alert(`Added ${added}, skipped ${skipped} duplicate(s).`);
         } catch (err) { alert('Error: ' + err.message); }
     };
 
@@ -567,51 +988,264 @@
         } catch (err) { alert('Error: ' + err.message); }
     };
 
+    window.editLink = (id) => window.openModal('single', id);
+
+    window.togglePinnedFilter = () => {
+        pinnedOnly = !pinnedOnly;
+        document.getElementById('pinnedFilter').classList.toggle('active', pinnedOnly);
+        renderLinks();
+    };
+
+    window.filterByTag = (tag) => {
+        activeTag = activeTag === tag ? '' : tag;
+        renderLinks();
+    };
+
+    window.clearAllFilters = () => {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('folderFilter').value = '';
+        document.getElementById('userFilter').value = '';
+        document.getElementById('sortSelect').value = 'newest';
+        pinnedOnly = false;
+        activeTag = '';
+        document.getElementById('pinnedFilter').classList.remove('active');
+        renderLinks();
+    };
+
+    window.toggleFolder = (folder) => {
+        if (collapsedFolders.has(folder)) collapsedFolders.delete(folder);
+        else collapsedFolders.add(folder);
+        renderLinks();
+    };
+
+    // === SELECTION / BULK ACTIONS ===
+    window.toggleSelectMode = () => {
+        selectMode = !selectMode;
+        selectedIds.clear();
+        document.getElementById('selectModeBtn').classList.toggle('active', selectMode);
+        document.getElementById('bulkBar').classList.toggle('active', selectMode);
+        renderLinks();
+        updateBulkCount();
+    };
+
+    window.toggleSelect = (id) => {
+        if (selectedIds.has(id)) selectedIds.delete(id);
+        else selectedIds.add(id);
+        updateBulkCount();
+        renderLinks();
+    };
+
+    function updateBulkCount() {
+        document.getElementById('bulkCount').textContent = `${selectedIds.size} selected`;
+    }
+
+    window.bulkSelectAll = () => {
+        getCurrentlyVisible().forEach(l => selectedIds.add(l.id));
+        updateBulkCount();
+        renderLinks();
+    };
+
+    window.bulkClearSelection = () => {
+        selectedIds.clear();
+        updateBulkCount();
+        renderLinks();
+    };
+
+    function getCurrentlyVisible() {
+        const q = document.getElementById('searchInput').value.trim();
+        const folderFilter = document.getElementById('folderFilter').value;
+        const userFilter = document.getElementById('userFilter').value;
+        return links.filter(l => {
+            if (!matchesSearch(l, q)) return false;
+            if (pinnedOnly && !l.pinned) return false;
+            if (folderFilter === '__none__' && l.folder) return false;
+            if (folderFilter && folderFilter !== '__none__' && l.folder !== folderFilter) return false;
+            if (userFilter && l.addedBy !== userFilter) return false;
+            if (activeTag && !(l.tags || []).includes(activeTag)) return false;
+            return true;
+        });
+    }
+
+    window.bulkMoveToFolder = async () => {
+        if (selectedIds.size === 0) return alert('Nothing selected.');
+        const folder = prompt('Move selected to folder (leave empty to remove from folder):', '');
+        if (folder === null) return;
+        try {
+            for (const id of selectedIds) {
+                await updateDoc(doc(db, 'links', id), { folder: folder.trim() });
+            }
+            await addLog('edited', `${selectedIds.size} links moved to "${folder || '(none)'}"`, '');
+            bulkClearSelection();
+        } catch (err) { alert('Error: ' + err.message); }
+    };
+
+    window.bulkAddTag = async () => {
+        if (selectedIds.size === 0) return alert('Nothing selected.');
+        const tag = prompt('Tag to add to all selected:');
+        if (!tag || !tag.trim()) return;
+        const cleanTag = tag.trim();
+        try {
+            for (const id of selectedIds) {
+                const link = links.find(l => l.id === id);
+                if (!link) continue;
+                const existing = link.tags || [];
+                if (!existing.includes(cleanTag)) {
+                    await updateDoc(doc(db, 'links', id), { tags: [...existing, cleanTag] });
+                }
+            }
+            await addLog('edited', `Added tag "${cleanTag}" to ${selectedIds.size} links`, '');
+            bulkClearSelection();
+        } catch (err) { alert('Error: ' + err.message); }
+    };
+
+    window.bulkPin = async () => {
+        if (selectedIds.size === 0) return alert('Nothing selected.');
+        const anyUnpinned = [...selectedIds].some(id => {
+            const l = links.find(x => x.id === id);
+            return l && !l.pinned;
+        });
+        const newState = anyUnpinned; // if any unpinned, pin all; else unpin all
+        try {
+            for (const id of selectedIds) {
+                await updateDoc(doc(db, 'links', id), { pinned: newState });
+            }
+            await addLog(newState ? 'pinned' : 'unpinned', `${selectedIds.size} links`, '');
+            bulkClearSelection();
+        } catch (err) { alert('Error: ' + err.message); }
+    };
+
+    window.bulkDelete = async () => {
+        if (selectedIds.size === 0) return alert('Nothing selected.');
+        if (!confirm(`Delete ${selectedIds.size} link(s)? This cannot be undone.`)) return;
+        try {
+            for (const id of selectedIds) {
+                const link = links.find(l => l.id === id);
+                await deleteDoc(doc(db, 'links', id));
+                if (link) await addLog('deleted', link.name, link.url);
+            }
+            bulkClearSelection();
+        } catch (err) { alert('Error: ' + err.message); }
+    };
+
+    // === RENDER ===
     window.renderLinks = () => {
         const container = document.getElementById('linkContainer');
-        const query = document.getElementById('searchInput').value.toLowerCase();
+        const q = document.getElementById('searchInput').value.trim();
+        const sortBy = document.getElementById('sortSelect').value;
+        const folderFilter = document.getElementById('folderFilter').value;
+        const userFilter = document.getElementById('userFilter').value;
 
-        const filtered = links.filter(l =>
-            l.name.toLowerCase().includes(query) ||
-            l.url.toLowerCase().includes(query) ||
-            (l.note && l.note.toLowerCase().includes(query))
-        );
+        const tagFilterEl = document.getElementById('activeTagFilter');
+        if (activeTag) {
+            tagFilterEl.innerHTML = `<div style="margin-top:0.5rem;">
+                <span class="filter-chip active" onclick="filterByTag('${escapeHtml(activeTag)}')">
+                    🏷️ ${escapeHtml(activeTag)} ✕
+                </span>
+            </div>`;
+        } else {
+            tagFilterEl.innerHTML = '';
+        }
 
-        const pinned = filtered.filter(l => l.pinned);
-        const unpinned = filtered.filter(l => !l.pinned);
+        let filtered = links.filter(l => {
+            if (!matchesSearch(l, q)) return false;
+            if (pinnedOnly && !l.pinned) return false;
+            if (folderFilter === '__none__' && l.folder) return false;
+            if (folderFilter && folderFilter !== '__none__' && l.folder !== folderFilter) return false;
+            if (userFilter && l.addedBy !== userFilter) return false;
+            if (activeTag && !(l.tags || []).includes(activeTag)) return false;
+            return true;
+        });
+
+        const sorters = {
+            newest: (a, b) => (b.created || 0) - (a.created || 0),
+            oldest: (a, b) => (a.created || 0) - (b.created || 0),
+            az: (a, b) => (a.name || '').localeCompare(b.name || ''),
+            za: (a, b) => (b.name || '').localeCompare(a.name || ''),
+            folder: (a, b) => (a.folder || 'zzz').localeCompare(b.folder || 'zzz')
+        };
+        filtered.sort(sorters[sortBy] || sorters.newest);
 
         if (filtered.length === 0) {
-            container.innerHTML = `<div class="empty-state">No links yet. Click <strong>+ Add</strong> to start.</div>`;
+            container.innerHTML = `<div class="empty-state">No links match. Try clearing filters.</div>`;
             return;
         }
 
         let html = '';
+        const pinned = filtered.filter(l => l.pinned);
+        const unpinned = filtered.filter(l => !l.pinned);
+
         if (pinned.length) {
             html += `<div class="section-label">⭐ Pinned</div>`;
             pinned.forEach(l => html += cardHTML(l));
         }
+
         if (unpinned.length) {
-            html += `<div class="section-label">All Links</div>`;
-            unpinned.forEach(l => html += cardHTML(l));
+            if (sortBy === 'folder') {
+                const byFolder = {};
+                unpinned.forEach(l => {
+                    const f = l.folder || '(No folder)';
+                    if (!byFolder[f]) byFolder[f] = [];
+                    byFolder[f].push(l);
+                });
+                Object.keys(byFolder).sort().forEach(folder => {
+                    const isCollapsed = collapsedFolders.has(folder);
+                    const color = folderColors[folder] || '#39ff14';
+                    const isReal = folder !== '(No folder)';
+                    html += `<div class="folder-header ${isCollapsed ? 'collapsed' : ''}" 
+                                  onclick="toggleFolder('${escapeHtml(folder)}')"
+                                  style="border-left-color: ${color};">
+                        <span class="folder-arrow">▼</span>
+                        <span style="color:${color};">📁 ${escapeHtml(folder)}</span>
+                        <span class="folder-count">${byFolder[folder].length}</span>
+                        ${isReal ? `<button class="folder-edit-btn" onclick="event.stopPropagation(); openFolderColorModal('${escapeHtml(folder)}')" title="Change color">🎨</button>` : ''}
+                    </div>`;
+                    if (!isCollapsed) {
+                        byFolder[folder].forEach(l => html += cardHTML(l));
+                    }
+                });
+            } else {
+                if (pinned.length) html += `<div class="section-label">All Links</div>`;
+                unpinned.forEach(l => html += cardHTML(l));
+            }
         }
+
         container.innerHTML = html;
     };
 
     function cardHTML(l) {
         const favicon = getFavicon(l.url);
         const faviconImg = favicon ? `<img class="link-favicon" src="${favicon}" alt="">` : '';
+        const tagsHTML = (l.tags && l.tags.length) ?
+            `<div class="link-tags">${l.tags.map(t => 
+                `<span class="tag" onclick="filterByTag('${escapeHtml(t)}')">${escapeHtml(t)}</span>`
+            ).join('')}</div>` : '';
+
+        const folderColor = l.folder ? (folderColors[l.folder] || '#666') : '';
+        const folderBadge = l.folder ? 
+            `<span class="folder-badge" style="background:${folderColor}22; color:${folderColor}; border:1px solid ${folderColor}55;">📁 ${escapeHtml(l.folder)}</span>` 
+            : '';
+
+        const isSelected = selectedIds.has(l.id);
+        const checkbox = selectMode ? 
+            `<input type="checkbox" class="link-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelect('${l.id}')">` 
+            : '';
+
         return `
-        <div class="link-card ${l.pinned ? 'pinned' : ''}">
+        <div class="link-card ${l.pinned ? 'pinned' : ''} ${isSelected ? 'selected' : ''}" 
+             title="${escapeHtml(l.url)}${l.note ? '\n\n' + l.note : ''}">
+            ${checkbox}
             ${faviconImg}
             <div class="link-info">
                 <a class="link-name" href="${l.url}" target="_blank" rel="noopener">${escapeHtml(l.name)}</a>
-                <div class="link-url">${escapeHtml(l.url)}</div>
+                <div class="link-url">${escapeHtml(l.url)} ${folderBadge}</div>
                 ${l.note ? `<div class="link-note">${escapeHtml(l.note)}</div>` : ''}
                 ${l.addedBy ? `<div class="link-added-by">added by ${escapeHtml(l.addedBy)}</div>` : ''}
+                ${tagsHTML}
             </div>
             <div class="link-actions">
-                <button class="btn-pin ${l.pinned ? 'active' : ''}" onclick="togglePin('${l.id}')">⭐</button>
-                <button class="btn-delete" onclick="deleteLink('${l.id}')">✕</button>
+                <button class="btn-pin ${l.pinned ? 'active' : ''}" onclick="togglePin('${l.id}')" title="Pin">⭐</button>
+                <button class="btn-edit" onclick="editLink('${l.id}')" title="Edit">✏️</button>
+                <button class="btn-delete" onclick="deleteLink('${l.id}')" title="Delete">✕</button>
             </div>
         </div>`;
     }
@@ -620,6 +1254,19 @@
         overlay.addEventListener('click', e => {
             if (e.target === overlay) window.closeModals();
         });
+    });
+
+    document.addEventListener('keydown', e => {
+        const inInput = ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
+        if (!inInput && (e.key === '/' || (e.key === 'k' && (e.ctrlKey || e.metaKey)))) {
+            e.preventDefault();
+            document.getElementById('searchInput').focus();
+        }
+        if (e.key === 'Escape') window.closeModals();
+        if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+            e.preventDefault();
+            window.openModal('single');
+        }
     });
 </script>
 
