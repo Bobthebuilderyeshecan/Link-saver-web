@@ -24,16 +24,22 @@
             border-radius: 8px;
             margin-bottom: 1rem;
             border: 1px solid #2a2a2a;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
-        header h1 {
-            font-size: 1.2rem;
-            color: #39ff14;
-        }
+        header h1 { font-size: 1.2rem; color: #39ff14; }
 
-        .header-buttons {
+        .header-right {
             display: flex;
             gap: 0.5rem;
+            align-items: center;
+        }
+
+        .user-info {
+            font-size: 0.75rem;
+            color: #888;
+            margin-right: 0.5rem;
         }
 
         button {
@@ -53,7 +59,6 @@
             color: #39ff14;
         }
 
-        /* MODAL */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -75,19 +80,8 @@
             max-width: 500px;
         }
 
-        .modal h2 {
-            color: #39ff14;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal label {
-            display: block;
-            font-size: 0.8rem;
-            color: #999;
-            margin-bottom: 0.2rem;
-            margin-top: 0.6rem;
-        }
+        .modal h2 { color: #39ff14; font-size: 1rem; margin-bottom: 1rem; }
+        .modal label { display: block; font-size: 0.8rem; color: #999; margin-bottom: 0.2rem; margin-top: 0.6rem; }
 
         .modal input, .modal textarea {
             width: 100%;
@@ -100,15 +94,8 @@
             font-family: inherit;
         }
 
-        .modal input:focus, .modal textarea:focus {
-            outline: none;
-            border-color: #39ff14;
-        }
-
-        .modal textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+        .modal input:focus, .modal textarea:focus { outline: none; border-color: #39ff14; }
+        .modal textarea { resize: vertical; min-height: 80px; }
 
         .modal-buttons {
             display: flex;
@@ -124,15 +111,9 @@
             border: none;
         }
 
-        .btn-save:hover {
-            background: #2ecc0f;
-            color: #000;
-        }
+        .btn-save:hover { background: #2ecc0f; color: #000; }
 
-        /* SEARCH */
-        .search-bar {
-            margin-bottom: 1rem;
-        }
+        .search-bar { margin-bottom: 1rem; }
 
         .search-bar input {
             width: 100%;
@@ -144,12 +125,8 @@
             font-size: 0.9rem;
         }
 
-        .search-bar input:focus {
-            outline: none;
-            border-color: #c8b800;
-        }
+        .search-bar input:focus { outline: none; border-color: #c8b800; }
 
-        /* LINKS LIST */
         .section-label {
             font-size: 0.75rem;
             color: #c8b800;
@@ -172,20 +149,11 @@
         }
 
         .link-card:hover { border-color: #39ff14; }
-
         .link-card.pinned { border-left: 3px solid #c8b800; }
 
-        .link-favicon {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
+        .link-favicon { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; }
 
-        .link-info {
-            flex: 1;
-            min-width: 0;
-        }
+        .link-info { flex: 1; min-width: 0; }
 
         .link-name {
             font-size: 0.85rem;
@@ -199,60 +167,79 @@
         }
 
         .link-name:hover { text-decoration: underline; }
+        .link-url { font-size: 0.7rem; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .link-note { font-size: 0.7rem; color: #888; margin-top: 0.15rem; }
+        .link-added-by { font-size: 0.65rem; color: #555; margin-top: 0.1rem; font-style: italic; }
 
-        .link-url {
-            font-size: 0.7rem;
-            color: #666;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .link-note {
-            font-size: 0.7rem;
-            color: #888;
-            margin-top: 0.15rem;
-        }
-
-        .link-actions {
-            display: flex;
-            gap: 0.3rem;
-            flex-shrink: 0;
-        }
-
-        .link-actions button {
-            padding: 0.2rem 0.4rem;
-            font-size: 0.75rem;
-        }
+        .link-actions { display: flex; gap: 0.3rem; flex-shrink: 0; }
+        .link-actions button { padding: 0.2rem 0.4rem; font-size: 0.75rem; }
 
         .btn-pin { color: #c8b800; }
         .btn-pin.active { color: #1a1a1a; background: #c8b800; }
         .btn-delete { color: #ff4444; }
         .btn-delete:hover { border-color: #ff4444; }
 
-        .empty-state {
+        .empty-state { text-align: center; color: #555; padding: 2rem; font-size: 0.9rem; }
+
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
             text-align: center;
-            color: #555;
-            padding: 2rem;
-            font-size: 0.9rem;
+            gap: 1rem;
         }
+
+        .login-screen h1 { color: #39ff14; font-size: 2rem; }
+        .login-screen p { color: #888; }
+
+        .btn-login {
+            background: #39ff14;
+            color: #1a1a1a;
+            font-weight: bold;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            border: none;
+        }
+
+        .btn-login:hover { background: #2ecc0f; color: #000; }
+
+        .hidden { display: none !important; }
+
+        .loading { text-align: center; color: #666; padding: 2rem; }
     </style>
 </head>
 <body>
 
-<header>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-screen">
     <h1>🔗 Link Vault</h1>
-    <div class="header-buttons">
-        <button onclick="openModal('single')">+ Add Link</button>
-        <button onclick="openModal('mass')">+ Mass Add</button>
-    </div>
-</header>
-
-<div class="search-bar">
-    <input type="text" id="searchInput" placeholder="Search links..." oninput="renderLinks()">
+    <p>Sign in with your Google account to continue</p>
+    <button class="btn-login" onclick="signIn()">Sign in with Google</button>
+    <p id="loginError" style="color:#ff4444; font-size: 0.85rem;"></p>
 </div>
 
-<div id="linkContainer"></div>
+<!-- MAIN APP -->
+<div id="app" class="hidden">
+    <header>
+        <h1>🔗 Link Vault</h1>
+        <div class="header-right">
+            <span class="user-info" id="userInfo"></span>
+            <button onclick="openModal('single')">+ Add</button>
+            <button onclick="openModal('mass')">+ Mass</button>
+            <button onclick="signOutUser()">Sign Out</button>
+        </div>
+    </header>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search links..." oninput="renderLinks()">
+    </div>
+
+    <div id="linkContainer">
+        <div class="loading">Loading links...</div>
+    </div>
+</div>
 
 <!-- SINGLE ADD MODAL -->
 <div class="modal-overlay" id="singleModal">
@@ -275,10 +262,8 @@
 <div class="modal-overlay" id="massModal">
     <div class="modal">
         <h2>Mass Add Links</h2>
-        <label>One link per line — format: <code style="color:#39ff14;">Name | URL</code> or just <code style="color:#39ff14;">URL</code></label>
-        <textarea id="massInput" placeholder="GitHub | https://github.com
-https://stackoverflow.com
-Reddit | https://reddit.com"></textarea>
+        <label>One per line — format: <code style="color:#39ff14;">Name | URL</code> or just <code style="color:#39ff14;">URL</code></label>
+        <textarea id="massInput" placeholder="GitHub | https://github.com&#10;https://stackoverflow.com&#10;Reddit | https://reddit.com"></textarea>
         <div class="modal-buttons">
             <button onclick="closeModals()">Cancel</button>
             <button class="btn-save" onclick="massSave()">Save All</button>
@@ -286,23 +271,71 @@ Reddit | https://reddit.com"></textarea>
     </div>
 </div>
 
-<script>
-    let links = JSON.parse(localStorage.getItem('linkVault') || '[]');
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { 
+        getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { 
+        getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy 
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    function save() {
-        localStorage.setItem('linkVault', JSON.stringify(links));
-    }
+    const firebaseConfig = {
+        apiKey: "AIzaSyAHykw_a-QrN6imah6XCZv2BOAa5H7YAN8",
+        authDomain: "link-vault-web-43e6d.firebaseapp.com",
+        projectId: "link-vault-web-43e6d",
+        storageBucket: "link-vault-web-43e6d.firebasestorage.app",
+        messagingSenderId: "739412012076",
+        appId: "1:739412012076:web:4cdfe05660c6c3810df589"
+    };
 
-    function generateId() {
-        return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let links = [];
+    let currentUser = null;
+
+    // === AUTH ===
+    window.signIn = async () => {
+        try {
+            await signInWithPopup(auth, provider);
+        } catch (err) {
+            document.getElementById('loginError').textContent = err.message;
+        }
+    };
+
+    window.signOutUser = () => signOut(auth);
+
+    onAuthStateChanged(auth, user => {
+        if (user) {
+            currentUser = user;
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('userInfo').textContent = user.email;
+            listenToLinks();
+        } else {
+            currentUser = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('app').classList.add('hidden');
+        }
+    });
+
+    // === FIRESTORE ===
+    function listenToLinks() {
+        const q = query(collection(db, 'links'), orderBy('created', 'desc'));
+        onSnapshot(q, snapshot => {
+            links = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderLinks();
+        }, err => {
+            document.getElementById('linkContainer').innerHTML = 
+                `<div class="empty-state" style="color:#ff4444;">Error: ${err.message}<br><small>You may not be authorized.</small></div>`;
+        });
     }
 
     function getDomain(url) {
-        try {
-            return new URL(url).hostname;
-        } catch {
-            return '';
-        }
+        try { return new URL(url).hostname; } catch { return ''; }
     }
 
     function getFavicon(url) {
@@ -316,22 +349,17 @@ Reddit | https://reddit.com"></textarea>
         return url;
     }
 
-    // MODAL CONTROLS
-    function openModal(type) {
+    window.openModal = type => {
         if (type === 'single') document.getElementById('singleModal').classList.add('active');
         if (type === 'mass') document.getElementById('massModal').classList.add('active');
-    }
+    };
 
-    function closeModals() {
+    window.closeModals = () => {
         document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-        document.getElementById('linkName').value = '';
-        document.getElementById('linkURL').value = '';
-        document.getElementById('linkNote').value = '';
-        document.getElementById('massInput').value = '';
-    }
+        ['linkName','linkURL','linkNote','massInput'].forEach(id => document.getElementById(id).value = '');
+    };
 
-    // SAVE SINGLE
-    function saveLink() {
+    window.saveLink = async () => {
         const name = document.getElementById('linkName').value.trim();
         const rawUrl = document.getElementById('linkURL').value.trim();
         const note = document.getElementById('linkNote').value.trim();
@@ -340,76 +368,66 @@ Reddit | https://reddit.com"></textarea>
 
         const url = ensureProtocol(rawUrl);
 
-        links.push({
-            id: generateId(),
-            name: name || getDomain(url) || url,
-            url: url,
-            note: note,
-            pinned: false,
-            created: Date.now()
-        });
+        try {
+            await addDoc(collection(db, 'links'), {
+                name: name || getDomain(url) || url,
+                url, note,
+                pinned: false,
+                created: Date.now(),
+                addedBy: currentUser.email
+            });
+            closeModals();
+        } catch (err) { alert('Error: ' + err.message); }
+    };
 
-        save();
-        renderLinks();
-        closeModals();
-    }
-
-    // MASS SAVE
-    function massSave() {
+    window.massSave = async () => {
         const raw = document.getElementById('massInput').value.trim();
         if (!raw) return;
 
         const lines = raw.split('\n').filter(l => l.trim());
+        try {
+            for (const line of lines) {
+                let name = '', url = '';
+                if (line.includes('|')) {
+                    const parts = line.split('|');
+                    name = parts[0].trim();
+                    url = parts.slice(1).join('|').trim();
+                } else {
+                    url = line.trim();
+                }
+                url = ensureProtocol(url);
+                name = name || getDomain(url) || url;
 
-        lines.forEach(line => {
-            let name = '', url = '';
-
-            if (line.includes('|')) {
-                const parts = line.split('|');
-                name = parts[0].trim();
-                url = parts.slice(1).join('|').trim();
-            } else {
-                url = line.trim();
+                await addDoc(collection(db, 'links'), {
+                    name, url, note: '',
+                    pinned: false,
+                    created: Date.now(),
+                    addedBy: currentUser.email
+                });
             }
+            closeModals();
+        } catch (err) { alert('Error: ' + err.message); }
+    };
 
-            url = ensureProtocol(url);
-            name = name || getDomain(url) || url;
-
-            links.push({
-                id: generateId(),
-                name: name,
-                url: url,
-                note: '',
-                pinned: false,
-                created: Date.now()
-            });
-        });
-
-        save();
-        renderLinks();
-        closeModals();
-    }
-
-    // PIN / DELETE
-    function togglePin(id) {
+    window.togglePin = async id => {
         const link = links.find(l => l.id === id);
-        if (link) link.pinned = !link.pinned;
-        save();
-        renderLinks();
-    }
+        if (!link) return;
+        try {
+            await updateDoc(doc(db, 'links', id), { pinned: !link.pinned });
+        } catch (err) { alert('Error: ' + err.message); }
+    };
 
-    function deleteLink(id) {
-        links = links.filter(l => l.id !== id);
-        save();
-        renderLinks();
-    }
+    window.deleteLink = async id => {
+        if (!confirm('Delete this link?')) return;
+        try { await deleteDoc(doc(db, 'links', id)); }
+        catch (err) { alert('Error: ' + err.message); }
+    };
 
-    // RENDER
-    function renderLinks() {
+    window.renderLinks = () => {
         const container = document.getElementById('linkContainer');
         const query = document.getElementById('searchInput').value.toLowerCase();
 
-        let filtered = links.filter(l =>
+        const filtered = links.filter(l =>
             l.name.toLowerCase().includes(query) ||
             l.url.toLowerCase().includes(query) ||
             (l.note && l.note.toLowerCase().includes(query))
@@ -419,29 +437,25 @@ Reddit | https://reddit.com"></textarea>
         const unpinned = filtered.filter(l => !l.pinned);
 
         if (filtered.length === 0) {
-            container.innerHTML = `<div class="empty-state">No links saved yet. Click <strong>+ Add Link</strong> to get started.</div>`;
+            container.innerHTML = `<div class="empty-state">No links yet. Click <strong>+ Add</strong> to start.</div>`;
             return;
         }
 
         let html = '';
-
         if (pinned.length) {
             html += `<div class="section-label">⭐ Pinned</div>`;
             pinned.forEach(l => html += cardHTML(l));
         }
-
         if (unpinned.length) {
             html += `<div class="section-label">All Links</div>`;
             unpinned.forEach(l => html += cardHTML(l));
         }
-
         container.innerHTML = html;
-    }
+    };
 
     function cardHTML(l) {
         const favicon = getFavicon(l.url);
         const faviconImg = favicon ? `<img class="link-favicon" src="${favicon}" alt="">` : '';
-
         return `
         <div class="link-card ${l.pinned ? 'pinned' : ''}">
             ${faviconImg}
@@ -449,6 +463,7 @@ Reddit | https://reddit.com"></textarea>
                 <a class="link-name" href="${l.url}" target="_blank" rel="noopener">${l.name}</a>
                 <div class="link-url">${l.url}</div>
                 ${l.note ? `<div class="link-note">${l.note}</div>` : ''}
+                ${l.addedBy ? `<div class="link-added-by">added by ${l.addedBy}</div>` : ''}
             </div>
             <div class="link-actions">
                 <button class="btn-pin ${l.pinned ? 'active' : ''}" onclick="togglePin('${l.id}')">⭐</button>
@@ -457,15 +472,11 @@ Reddit | https://reddit.com"></textarea>
         </div>`;
     }
 
-    // Close modals on overlay click
     document.querySelectorAll('.modal-overlay').forEach(overlay => {
         overlay.addEventListener('click', e => {
-            if (e.target === overlay) closeModals();
+            if (e.target === overlay) window.closeModals();
         });
     });
-
-    // INIT
-    renderLinks();
 </script>
 
 </body>
