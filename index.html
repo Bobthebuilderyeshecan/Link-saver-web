@@ -34,6 +34,7 @@
             display: flex;
             gap: 0.5rem;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .user-info {
@@ -77,7 +78,9 @@
             border-radius: 10px;
             padding: 1.5rem;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         .modal h2 { color: #39ff14; font-size: 1rem; margin-bottom: 1rem; }
@@ -208,6 +211,34 @@
         .hidden { display: none !important; }
 
         .loading { text-align: center; color: #666; padding: 2rem; }
+
+        /* LOG ENTRIES */
+        .log-entry {
+            padding: 0.5rem 0.7rem;
+            background: #1a1a1a;
+            border-left: 3px solid #2a2a2a;
+            border-radius: 4px;
+            margin-bottom: 0.4rem;
+            font-size: 0.8rem;
+        }
+
+        .log-entry.added { border-left-color: #39ff14; }
+        .log-entry.deleted { border-left-color: #ff4444; }
+        .log-entry.pinned { border-left-color: #c8b800; }
+
+        .log-action {
+            color: #e0e0e0;
+            font-weight: 500;
+        }
+
+        .log-meta {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 0.2rem;
+        }
+
+        .log-user { color: #c8b800; }
+        .log-link { color: #39ff14; }
     </style>
 </head>
 <body>
@@ -228,6 +259,7 @@
             <span class="user-info" id="userInfo"></span>
             <button onclick="openModal('single')">+ Add</button>
             <button onclick="openModal('mass')">+ Mass</button>
+            <button onclick="openModal('log')">📜 Log</button>
             <button onclick="signOutUser()">Sign Out</button>
         </div>
     </header>
@@ -271,13 +303,27 @@
     </div>
 </div>
 
+<!-- LOG MODAL -->
+<div class="modal-overlay" id="logModal">
+    <div class="modal">
+        <h2>📜 Activity Log <span style="color:#666; font-size:0.75rem; font-weight:normal;">(last 7 days)</span></h2>
+        <div id="logContainer">
+            <div class="loading">Loading log...</div>
+        </div>
+        <div class="modal-buttons">
+            <button onclick="closeModals()">Close</button>
+        </div>
+    </div>
+</div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { 
         getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
     import { 
-        getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy 
+        getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, 
+        onSnapshot, query, orderBy, where, getDocs 
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -295,7 +341,10 @@
     const provider = new GoogleAuthProvider();
 
     let links = [];
+    let logs = [];
     let currentUser = null;
+
+    const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
     // === AUTH ===
     window.signIn = async () => {
@@ -315,6 +364,8 @@
             document.getElementById('app').classList.remove('hidden');
             document.getElementById('userInfo').textContent = user.email;
             listenToLinks();
+            listenToLogs();
+            cleanOldLogs();
         } else {
             currentUser = null;
             document.getElementById('loginScreen').classList.remove('hidden');
@@ -322,7 +373,84 @@
         }
     });
 
-    // === FIRESTORE ===
+    // === LOGS ===
+    async function addLog(action, linkName, linkUrl) {
+        try {
+            await addDoc(collection(db, 'logs'), {
+                action,             // 'added', 'deleted', 'pinned', 'unpinned'
+                linkName: linkName || '',
+                linkUrl: linkUrl || '',
+                user: currentUser.email,
+                timestamp: Date.now()
+            });
+        } catch (err) {
+            console.error('Log failed:', err);
+        }
+    }
+
+    async function cleanOldLogs() {
+        try {
+            const cutoff = Date.now() - ONE_WEEK_MS;
+            const oldLogsQuery = query(collection(db, 'logs'), where('timestamp', '<', cutoff));
+            const snap = await getDocs(oldLogsQuery);
+            const deletions = snap.docs.map(d => deleteDoc(doc(db, 'logs', d.id)));
+            await Promise.all(deletions);
+        } catch (err) {
+            console.error('Log cleanup failed:', err);
+        }
+    }
+
+    function listenToLogs() {
+        const q = query(collection(db, 'logs'), orderBy('timestamp', 'desc'));
+        onSnapshot(q, snapshot => {
+            logs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            renderLogs();
+        });
+    }
+
+    function renderLogs() {
+        const container = document.getElementById('logContainer');
+        if (logs.length === 0) {
+            container.innerHTML = `<div class="empty-state">No activity yet.</div>`;
+            return;
+        }
+
+        const cutoff = Date.now() - ONE_WEEK_MS;
+        const recent = logs.filter(l => l.timestamp >= cutoff);
+
+        if (recent.length === 0) {
+            container.innerHTML = `<div class="empty-state">No activity in the last 7 days.</div>`;
+            return;
+        }
+
+        container.innerHTML = recent.map(l => {
+            const date = new Date(l.timestamp);
+            const dateStr = date.toLocaleString('en-US', { 
+                month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' 
+            });
+
+            let actionText = '';
+            if (l.action === 'added') actionText = `added <span class="log-link">${escapeHtml(l.linkName)}</span>`;
+            else if (l.action === 'deleted') actionText = `deleted <span class="log-link">${escapeHtml(l.linkName)}</span>`;
+            else if (l.action === 'pinned') actionText = `pinned <span class="log-link">${escapeHtml(l.linkName)}</span>`;
+            else if (l.action === 'unpinned') actionText = `unpinned <span class="log-link">${escapeHtml(l.linkName)}</span>`;
+            else actionText = l.action;
+
+            return `
+            <div class="log-entry ${l.action}">
+                <div class="log-action"><span class="log-user">${escapeHtml(l.user)}</span> ${actionText}</div>
+                <div class="log-meta">${dateStr}</div>
+            </div>`;
+        }).join('');
+    }
+
+    function escapeHtml(str) {
+        return String(str || '').replace(/[&<>"']/g, c => ({
+            '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+        }[c]));
+    }
+
+    // === FIRESTORE LINKS ===
     function listenToLinks() {
         const q = query(collection(db, 'links'), orderBy('created', 'desc'));
         onSnapshot(q, snapshot => {
@@ -330,7 +458,7 @@
             renderLinks();
         }, err => {
             document.getElementById('linkContainer').innerHTML = 
-                `<div class="empty-state" style="color:#ff4444;">Error: ${err.message}<br><small>You may not be authorized.</small></div>`;
+                `<div class="empty-state" style="color:#ff4444;">Error: ${err.message}</div>`;
         });
     }
 
@@ -352,11 +480,18 @@
     window.openModal = type => {
         if (type === 'single') document.getElementById('singleModal').classList.add('active');
         if (type === 'mass') document.getElementById('massModal').classList.add('active');
+        if (type === 'log') {
+            document.getElementById('logModal').classList.add('active');
+            cleanOldLogs(); // clean on open too
+        }
     };
 
     window.closeModals = () => {
         document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-        ['linkName','linkURL','linkNote','massInput'].forEach(id => document.getElementById(id).value = '');
+        ['linkName','linkURL','linkNote','massInput'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
     };
 
     window.saveLink = async () => {
@@ -367,15 +502,17 @@
         if (!rawUrl) return alert('URL is required.');
 
         const url = ensureProtocol(rawUrl);
+        const finalName = name || getDomain(url) || url;
 
         try {
             await addDoc(collection(db, 'links'), {
-                name: name || getDomain(url) || url,
+                name: finalName,
                 url, note,
                 pinned: false,
                 created: Date.now(),
                 addedBy: currentUser.email
             });
+            await addLog('added', finalName, url);
             closeModals();
         } catch (err) { alert('Error: ' + err.message); }
     };
@@ -404,6 +541,7 @@
                     created: Date.now(),
                     addedBy: currentUser.email
                 });
+                await addLog('added', name, url);
             }
             closeModals();
         } catch (err) { alert('Error: ' + err.message); }
@@ -413,14 +551,20 @@
         const link = links.find(l => l.id === id);
         if (!link) return;
         try {
-            await updateDoc(doc(db, 'links', id), { pinned: !link.pinned });
+            const newPinned = !link.pinned;
+            await updateDoc(doc(db, 'links', id), { pinned: newPinned });
+            await addLog(newPinned ? 'pinned' : 'unpinned', link.name, link.url);
         } catch (err) { alert('Error: ' + err.message); }
     };
 
     window.deleteLink = async id => {
+        const link = links.find(l => l.id === id);
+        if (!link) return;
         if (!confirm('Delete this link?')) return;
-        try { await deleteDoc(doc(db, 'links', id)); }
-        catch (err) { alert('Error: ' + err.message); }
+        try {
+            await deleteDoc(doc(db, 'links', id));
+            await addLog('deleted', link.name, link.url);
+        } catch (err) { alert('Error: ' + err.message); }
     };
 
     window.renderLinks = () => {
@@ -460,10 +604,10 @@
         <div class="link-card ${l.pinned ? 'pinned' : ''}">
             ${faviconImg}
             <div class="link-info">
-                <a class="link-name" href="${l.url}" target="_blank" rel="noopener">${l.name}</a>
-                <div class="link-url">${l.url}</div>
-                ${l.note ? `<div class="link-note">${l.note}</div>` : ''}
-                ${l.addedBy ? `<div class="link-added-by">added by ${l.addedBy}</div>` : ''}
+                <a class="link-name" href="${l.url}" target="_blank" rel="noopener">${escapeHtml(l.name)}</a>
+                <div class="link-url">${escapeHtml(l.url)}</div>
+                ${l.note ? `<div class="link-note">${escapeHtml(l.note)}</div>` : ''}
+                ${l.addedBy ? `<div class="link-added-by">added by ${escapeHtml(l.addedBy)}</div>` : ''}
             </div>
             <div class="link-actions">
                 <button class="btn-pin ${l.pinned ? 'active' : ''}" onclick="togglePin('${l.id}')">⭐</button>
