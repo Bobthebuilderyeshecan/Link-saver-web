@@ -1,1 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Vault</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            background: #222;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #2a2a2a;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            color: #39ff14;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        button {
+            background: #2a2a2a;
+            color: #c8b800;
+            border: 1px solid #3a3a3a;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #3a3a3a;
+            border-color: #39ff14;
+            color: #39ff14;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: #222;
+            border: 1px solid #39ff14;
+            border-radius: 10px;
+            padding: 1.5rem;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .modal h2 {
+            color: #39ff14;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal label {
+            display: block;
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 0.2rem;
+            margin-top: 0.6rem;
+        }
+
+        .modal input, .modal textarea {
+            width: 100%;
+            padding: 0.5rem;
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .modal input:focus, .modal textarea:focus {
+            outline: none;
+            border-color: #39ff14;
+        }
+
+        .modal textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-save {
+            background: #39ff14;
+            color: #1a1a1a;
+            font-weight: bold;
+            border: none;
+        }
+
+        .btn-save:hover {
+            background: #2ecc0f;
+            color: #000;
+        }
+
+        /* SEARCH */
+        .search-bar {
+            margin-bottom: 1rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.5rem 0.8rem;
+            background: #222;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #c8b800;
+        }
+
+        /* LINKS LIST */
+        .section-label {
+            font-size: 0.75rem;
+            color: #c8b800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.4rem;
+            margin-top: 0.8rem;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: #222;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 0.4rem;
+            transition: border-color 0.2s;
+        }
+
+        .link-card:hover { border-color: #39ff14; }
+
+        .link-card.pinned { border-left: 3px solid #c8b800; }
+
+        .link-favicon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .link-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .link-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #39ff14;
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .link-name:hover { text-decoration: underline; }
+
+        .link-url {
+            font-size: 0.7rem;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .link-note {
+            font-size: 0.7rem;
+            color: #888;
+            margin-top: 0.15rem;
+        }
+
+        .link-actions {
+            display: flex;
+            gap: 0.3rem;
+            flex-shrink: 0;
+        }
+
+        .link-actions button {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.75rem;
+        }
+
+        .btn-pin { color: #c8b800; }
+        .btn-pin.active { color: #1a1a1a; background: #c8b800; }
+        .btn-delete { color: #ff4444; }
+        .btn-delete:hover { border-color: #ff4444; }
+
+        .empty-state {
+            text-align: center;
+            color: #555;
+            padding: 2rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🔗 Link Vault</h1>
+    <div class="header-buttons">
+        <button onclick="openModal('single')">+ Add Link</button>
+        <button onclick="openModal('mass')">+ Mass Add</button>
+    </div>
+</header>
+
+<div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search links..." oninput="renderLinks()">
+</div>
+
+<div id="linkContainer"></div>
+
+<!-- SINGLE ADD MODAL -->
+<div class="modal-overlay" id="singleModal">
+    <div class="modal">
+        <h2>Add a Link</h2>
+        <label>Name</label>
+        <input type="text" id="linkName" placeholder="e.g. GitHub">
+        <label>URL</label>
+        <input type="text" id="linkURL" placeholder="e.g. https://github.com">
+        <label>Note (optional)</label>
+        <input type="text" id="linkNote" placeholder="e.g. My repos">
+        <div class="modal-buttons">
+            <button onclick="closeModals()">Cancel</button>
+            <button class="btn-save" onclick="saveLink()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- MASS ADD MODAL -->
+<div class="modal-overlay" id="massModal">
+    <div class="modal">
+        <h2>Mass Add Links</h2>
+        <label>One link per line — format: <code style="color:#39ff14;">Name | URL</code> or just <code style="color:#39ff14;">URL</code></label>
+        <textarea id="massInput" placeholder="GitHub | https://github.com
+https://stackoverflow.com
+Reddit | https://reddit.com"></textarea>
+        <div class="modal-buttons">
+            <button onclick="closeModals()">Cancel</button>
+            <button class="btn-save" onclick="massSave()">Save All</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let links = JSON.parse(localStorage.getItem('linkVault') || '[]');
+
+    function save() {
+        localStorage.setItem('linkVault', JSON.stringify(links));
+    }
+
+    function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+
+    function getDomain(url) {
+        try {
+            return new URL(url).hostname;
+        } catch {
+            return '';
+        }
+    }
+
+    function getFavicon(url) {
+        const domain = getDomain(url);
+        return domain ? `https://www.google.com/s2/favicons?domain=${domain}&sz=32` : '';
+    }
+
+    function ensureProtocol(url) {
+        url = url.trim();
+        if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+        return url;
+    }
+
+    // MODAL CONTROLS
+    function openModal(type) {
+        if (type === 'single') document.getElementById('singleModal').classList.add('active');
+        if (type === 'mass') document.getElementById('massModal').classList.add('active');
+    }
+
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        document.getElementById('linkName').value = '';
+        document.getElementById('linkURL').value = '';
+        document.getElementById('linkNote').value = '';
+        document.getElementById('massInput').value = '';
+    }
+
+    // SAVE SINGLE
+    function saveLink() {
+        const name = document.getElementById('linkName').value.trim();
+        const rawUrl = document.getElementById('linkURL').value.trim();
+        const note = document.getElementById('linkNote').value.trim();
+
+        if (!rawUrl) return alert('URL is required.');
+
+        const url = ensureProtocol(rawUrl);
+
+        links.push({
+            id: generateId(),
+            name: name || getDomain(url) || url,
+            url: url,
+            note: note,
+            pinned: false,
+            created: Date.now()
+        });
+
+        save();
+        renderLinks();
+        closeModals();
+    }
+
+    // MASS SAVE
+    function massSave() {
+        const raw = document.getElementById('massInput').value.trim();
+        if (!raw) return;
+
+        const lines = raw.split('\n').filter(l => l.trim());
+
+        lines.forEach(line => {
+            let name = '', url = '';
+
+            if (line.includes('|')) {
+                const parts = line.split('|');
+                name = parts[0].trim();
+                url = parts.slice(1).join('|').trim();
+            } else {
+                url = line.trim();
+            }
+
+            url = ensureProtocol(url);
+            name = name || getDomain(url) || url;
+
+            links.push({
+                id: generateId(),
+                name: name,
+                url: url,
+                note: '',
+                pinned: false,
+                created: Date.now()
+            });
+        });
+
+        save();
+        renderLinks();
+        closeModals();
+    }
+
+    // PIN / DELETE
+    function togglePin(id) {
+        const link = links.find(l => l.id === id);
+        if (link) link.pinned = !link.pinned;
+        save();
+        renderLinks();
+    }
+
+    function deleteLink(id) {
+        links = links.filter(l => l.id !== id);
+        save();
+        renderLinks();
+    }
+
+    // RENDER
+    function renderLinks() {
+        const container = document.getElementById('linkContainer');
+        const query = document.getElementById('searchInput').value.toLowerCase();
+
+        let filtered = links.filter(l =>
+            l.name.toLowerCase().includes(query) ||
+            l.url.toLowerCase().includes(query) ||
+            (l.note && l.note.toLowerCase().includes(query))
+        );
+
+        const pinned = filtered.filter(l => l.pinned);
+        const unpinned = filtered.filter(l => !l.pinned);
+
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="empty-state">No links saved yet. Click <strong>+ Add Link</strong> to get started.</div>`;
+            return;
+        }
+
+        let html = '';
+
+        if (pinned.length) {
+            html += `<div class="section-label">⭐ Pinned</div>`;
+            pinned.forEach(l => html += cardHTML(l));
+        }
+
+        if (unpinned.length) {
+            html += `<div class="section-label">All Links</div>`;
+            unpinned.forEach(l => html += cardHTML(l));
+        }
+
+        container.innerHTML = html;
+    }
+
+    function cardHTML(l) {
+        const favicon = getFavicon(l.url);
+        const faviconImg = favicon ? `<img class="link-favicon" src="${favicon}" alt="">` : '';
+
+        return `
+        <div class="link-card ${l.pinned ? 'pinned' : ''}">
+            ${faviconImg}
+            <div class="link-info">
+                <a class="link-name" href="${l.url}" target="_blank" rel="noopener">${l.name}</a>
+                <div class="link-url">${l.url}</div>
+                ${l.note ? `<div class="link-note">${l.note}</div>` : ''}
+            </div>
+            <div class="link-actions">
+                <button class="btn-pin ${l.pinned ? 'active' : ''}" onclick="togglePin('${l.id}')">⭐</button>
+                <button class="btn-delete" onclick="deleteLink('${l.id}')">✕</button>
+            </div>
+        </div>`;
+    }
+
+    // Close modals on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', e => {
+            if (e.target === overlay) closeModals();
+        });
+    });
+
+    // INIT
+    renderLinks();
+</script>
+
+</body>
+</html>
