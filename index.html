@@ -90,13 +90,14 @@
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.7); z-index: 100;
             justify-content: center; align-items: center;
+            padding: 1rem;
         }
         .modal-overlay.active { display: flex; }
 
         .modal {
             background: var(--bg-card); border: 1px solid var(--accent);
             border-radius: 10px; padding: 1.5rem;
-            width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto;
+            width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto;
         }
         .modal h2 { color: var(--accent); font-size: 1rem; margin-bottom: 1rem; }
         .modal label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.2rem; margin-top: 0.6rem; }
@@ -111,7 +112,7 @@
 
         .modal-buttons {
             display: flex; justify-content: flex-end;
-            gap: 0.5rem; margin-top: 1rem;
+            gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;
         }
         .btn-save { background: var(--accent); color: var(--bg); font-weight: bold; border: none; }
         .btn-save:hover { background: var(--accent-hover); color: #000; }
@@ -405,48 +406,7 @@
             border-radius: 3px; color: var(--accent2);
         }
 
-        /* AUTO-SORT */
-        .suggestion-card {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0.7rem;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-        }
-        .suggestion-card.skipped { opacity: 0.4; }
-
-        .suggestion-checkbox {
-            width: 18px; height: 18px; cursor: pointer;
-            accent-color: var(--accent); flex-shrink: 0;
-        }
-
-        .suggestion-info { flex: 1; min-width: 0; }
-        .suggestion-name {
-            font-size: 0.85rem; font-weight: 600; color: var(--accent);
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-        .suggestion-move {
-            font-size: 0.75rem; color: var(--text-dim); margin-top: 0.2rem;
-            display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap;
-        }
-        .suggestion-from { color: var(--danger); }
-        .suggestion-arrow { color: var(--text-faint); }
-        .suggestion-to { color: var(--accent); font-weight: 600; }
-        .suggestion-reason { font-size: 0.7rem; color: var(--text-faint); margin-top: 0.15rem; font-style: italic; }
-
-        .suggestion-folder-select {
-            font-size: 0.75rem;
-            padding: 0.2rem 0.4rem;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--accent);
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
+        /* === AUTO-SORT (FIXED) === */
         .auto-sort-summary {
             background: var(--bg-input);
             border-left: 3px solid var(--accent);
@@ -454,6 +414,104 @@
             border-radius: 6px;
             margin-bottom: 1rem;
             font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .auto-sort-summary strong { color: var(--accent); }
+
+        .auto-sort-controls {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .auto-sort-controls button {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.6rem;
+        }
+
+        .suggestion-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.6rem 0.7rem;
+            margin-bottom: 0.4rem;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 0.6rem;
+            align-items: start;
+            min-height: 0;
+        }
+
+        .suggestion-card.skipped { opacity: 0.4; }
+
+        .suggestion-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--accent);
+            margin-top: 0.15rem;
+        }
+
+        .suggestion-info {
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .suggestion-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0.25rem;
+        }
+
+        .suggestion-move-row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.2rem;
+        }
+
+        .suggestion-from {
+            color: var(--danger);
+            background: rgba(255, 68, 68, 0.1);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .suggestion-from.empty {
+            color: var(--text-faint);
+            background: transparent;
+            font-style: italic;
+        }
+
+        .suggestion-arrow {
+            color: var(--text-faint);
+            font-weight: bold;
+        }
+
+        .suggestion-folder-select {
+            font-size: 0.75rem;
+            padding: 0.15rem 0.3rem;
+            background: var(--bg);
+            border: 1px solid var(--border-hover);
+            color: var(--accent);
+            border-radius: 4px;
+            cursor: pointer;
+            max-width: 200px;
+        }
+
+        .suggestion-reason {
+            font-size: 0.7rem;
+            color: var(--text-faint);
+            font-style: italic;
         }
     </style>
 </head>
@@ -603,7 +661,6 @@
     </div>
 </div>
 
-<!-- AUTO-SORT MODAL -->
 <div class="modal-overlay" id="autoSortModal">
     <div class="modal">
         <h2>🪄 Auto-Sort Suggestions</h2>
@@ -680,9 +737,6 @@
         { id: 'midnight',   name: '🌙 Midnight Purple',  colors: ['#0a0a14', '#aa88ff', '#66ddff', '#ff5588'] }
     ];
 
-    // === AUTO-SORT KEYWORD RULES ===
-    // Format: { folder: 'FolderName', keywords: [...words to look for...] }
-    // Order matters — first match wins. More specific rules go first.
     const SORT_RULES = [
         {
             folder: 'Proxies',
@@ -1337,7 +1391,7 @@
         } catch (err) { alert('Error: ' + err.message); }
     };
 
-    // === AUTO-SORT LOGIC ===
+    // === AUTO-SORT (FIXED LAYOUT) ===
     function suggestFolder(link) {
         const haystack = [
             link.name || '', link.url || '', link.note || '',
@@ -1358,8 +1412,6 @@
         document.getElementById('autoSortModal').classList.add('active');
         document.getElementById('autoSortContent').innerHTML = `<div class="loading">Analyzing your links...</div>`;
         document.getElementById('applyAutoSortBtn').style.display = 'none';
-        
-        // Run analysis after a tiny delay so the loading shows
         setTimeout(runAutoSort, 200);
     };
 
@@ -1370,9 +1422,8 @@
         links.forEach(link => {
             const suggestion = suggestFolder(link);
             if (!suggestion) return;
-            
             const currentF = link.folder || '';
-            if (currentF === suggestion.folder) return; // already in right place
+            if (currentF === suggestion.folder) return;
             
             autoSortSuggestions.push({
                 id: link.id,
@@ -1382,7 +1433,7 @@
                 to: suggestion.folder,
                 reason: suggestion.reason,
                 isNewFolder: !existingFolders.has(suggestion.folder),
-                approved: true // selected by default
+                approved: true
             });
         });
 
@@ -1407,7 +1458,6 @@
             return;
         }
 
-        // Group by destination folder
         const byDest = {};
         autoSortSuggestions.forEach(s => {
             if (!byDest[s.to]) byDest[s.to] = [];
@@ -1418,26 +1468,28 @@
 
         let html = `
             <div class="auto-sort-summary">
-                Found <strong style="color:var(--accent);">${autoSortSuggestions.length}</strong> suggestion${autoSortSuggestions.length === 1 ? '' : 's'} across <strong>${Object.keys(byDest).length}</strong> folder${Object.keys(byDest).length === 1 ? '' : 's'}.
-                <br><span style="font-size:0.75rem; color:var(--text-faint);">Uncheck any you don't want, or change the destination folder.</span>
+                Found <strong>${autoSortSuggestions.length}</strong> suggestion${autoSortSuggestions.length === 1 ? '' : 's'} across <strong>${Object.keys(byDest).length}</strong> folder${Object.keys(byDest).length === 1 ? '' : 's'}.<br>
+                <span style="font-size:0.75rem; color:var(--text-faint);">Uncheck any you don't want, or change the destination folder.</span>
             </div>
-            <div style="display:flex; gap:0.5rem; margin-bottom:0.8rem;">
-                <button onclick="autoSortToggleAll(true)" style="font-size:0.75rem;">✓ Select All</button>
-                <button onclick="autoSortToggleAll(false)" style="font-size:0.75rem;">✕ Deselect All</button>
+            <div class="auto-sort-controls">
+                <button onclick="autoSortToggleAll(true)">✓ Select All</button>
+                <button onclick="autoSortToggleAll(false)">✕ Deselect All</button>
             </div>
         `;
 
         Object.keys(byDest).sort().forEach(destFolder => {
             const newBadge = byDest[destFolder][0].isNewFolder ? 
-                ` <span style="color:var(--accent2); font-size:0.7rem;">(new folder)</span>` : '';
+                ` <span style="color:var(--accent2); font-size:0.7rem; font-weight:normal;">(new folder)</span>` : '';
             html += `<div class="section-heading">→ ${escapeHtml(destFolder)}${newBadge}</div>`;
             
             byDest[destFolder].forEach(s => {
                 const safeId = s.id;
-                const fromText = s.from || '<em style="color:var(--text-faint);">Uncategorized</em>';
+                const fromHtml = s.from ? 
+                    `<span class="suggestion-from">${escapeHtml(s.from)}</span>` :
+                    `<span class="suggestion-from empty">Uncategorized</span>`;
                 
                 const folderOptions = ['(Uncategorized)', ...allFolders, s.to]
-                    .filter((v, i, a) => a.indexOf(v) === i) // unique
+                    .filter((v, i, a) => a.indexOf(v) === i)
                     .map(f => {
                         const val = f === '(Uncategorized)' ? '' : f;
                         const selected = val === s.to ? 'selected' : '';
@@ -1451,8 +1503,8 @@
                                onchange="autoSortToggleOne('${safeId}', this.checked)">
                         <div class="suggestion-info">
                             <div class="suggestion-name">${escapeHtml(s.name)}</div>
-                            <div class="suggestion-move">
-                                <span class="suggestion-from">${fromText}</span>
+                            <div class="suggestion-move-row">
+                                ${fromHtml}
                                 <span class="suggestion-arrow">→</span>
                                 <select class="suggestion-folder-select" onchange="autoSortChangeDest('${safeId}', this.value)">
                                     ${folderOptions}
@@ -1513,7 +1565,6 @@
         }
     };
 
-    // === RENDER ===
     window.renderView = () => {
         const q = document.getElementById('searchInput').value.trim();
         const breadcrumbEl = document.getElementById('breadcrumbContainer');
