@@ -75,6 +75,17 @@
         }
         button:hover { background: var(--border-hover); border-color: var(--accent); color: var(--accent); }
 
+        .btn-magic {
+            background: linear-gradient(135deg, #bb44ff, #44ccff);
+            color: #fff !important;
+            border: none;
+            font-weight: bold;
+        }
+        .btn-magic:hover {
+            background: linear-gradient(135deg, #cc55ff, #55ddff);
+            color: #fff !important;
+        }
+
         .modal-overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.7); z-index: 100;
@@ -85,7 +96,7 @@
         .modal {
             background: var(--bg-card); border: 1px solid var(--accent);
             border-radius: 10px; padding: 1.5rem;
-            width: 90%; max-width: 600px; max-height: 85vh; overflow-y: auto;
+            width: 90%; max-width: 700px; max-height: 85vh; overflow-y: auto;
         }
         .modal h2 { color: var(--accent); font-size: 1rem; margin-bottom: 1rem; }
         .modal label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.2rem; margin-top: 0.6rem; }
@@ -393,6 +404,57 @@
             background: var(--bg); padding: 0.1rem 0.3rem;
             border-radius: 3px; color: var(--accent2);
         }
+
+        /* AUTO-SORT */
+        .suggestion-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.7rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+        .suggestion-card.skipped { opacity: 0.4; }
+
+        .suggestion-checkbox {
+            width: 18px; height: 18px; cursor: pointer;
+            accent-color: var(--accent); flex-shrink: 0;
+        }
+
+        .suggestion-info { flex: 1; min-width: 0; }
+        .suggestion-name {
+            font-size: 0.85rem; font-weight: 600; color: var(--accent);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .suggestion-move {
+            font-size: 0.75rem; color: var(--text-dim); margin-top: 0.2rem;
+            display: flex; align-items: center; gap: 0.3rem; flex-wrap: wrap;
+        }
+        .suggestion-from { color: var(--danger); }
+        .suggestion-arrow { color: var(--text-faint); }
+        .suggestion-to { color: var(--accent); font-weight: 600; }
+        .suggestion-reason { font-size: 0.7rem; color: var(--text-faint); margin-top: 0.15rem; font-style: italic; }
+
+        .suggestion-folder-select {
+            font-size: 0.75rem;
+            padding: 0.2rem 0.4rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--accent);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .auto-sort-summary {
+            background: var(--bg-input);
+            border-left: 3px solid var(--accent);
+            padding: 0.7rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -411,6 +473,7 @@
             <span class="user-info" id="userInfo"></span>
             <button onclick="openModal('single')">+ Add</button>
             <button onclick="openModal('mass')">+ Mass</button>
+            <button class="btn-magic" onclick="openAutoSort()">🪄 Auto-Sort</button>
             <button onclick="openModal('log')">📜 Log</button>
             <button onclick="openModal('settings')">⚙️ Settings</button>
             <button onclick="signOutUser()">Sign Out</button>
@@ -540,6 +603,20 @@
     </div>
 </div>
 
+<!-- AUTO-SORT MODAL -->
+<div class="modal-overlay" id="autoSortModal">
+    <div class="modal">
+        <h2>🪄 Auto-Sort Suggestions</h2>
+        <div id="autoSortContent">
+            <div class="loading">Analyzing your links...</div>
+        </div>
+        <div class="modal-buttons">
+            <button onclick="closeModals()">Cancel</button>
+            <button class="btn-save" onclick="applyAutoSort()" id="applyAutoSortBtn" style="display:none;">Apply Selected Moves</button>
+        </div>
+    </div>
+</div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { 
@@ -576,6 +653,7 @@
     let pendingIcon = '';
     let currentFolder = null;
     let draggedFolder = null;
+    let autoSortSuggestions = [];
 
     const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -600,6 +678,77 @@
         { id: 'ocean',      name: '🌊 Deep Ocean',       colors: ['#0a1929', '#00d4ff', '#00ffaa', '#ffcc00'] },
         { id: 'forest',     name: '🌲 Forest',           colors: ['#0d1f13', '#7cff50', '#d4a017', '#ff5555'] },
         { id: 'midnight',   name: '🌙 Midnight Purple',  colors: ['#0a0a14', '#aa88ff', '#66ddff', '#ff5588'] }
+    ];
+
+    // === AUTO-SORT KEYWORD RULES ===
+    // Format: { folder: 'FolderName', keywords: [...words to look for...] }
+    // Order matters — first match wins. More specific rules go first.
+    const SORT_RULES = [
+        {
+            folder: 'Proxies',
+            keywords: ['proxy', 'proxies', 'unblocker', 'croxy', 'hide.me', 'hidester', 'kproxy', 
+                       'plainproxies', 'blockaway', 'turbohide', 'proxyium', 'proxfree', 'vpn',
+                       'holyub', 'holy unblocker', 'incog', 'womginx', 'ultraviolet', 'interstellar',
+                       'selenite', 'sun.gs', 'surf.kazwasaki', 'unblocker.live', 'incognito']
+        },
+        {
+            folder: 'Unblocked',
+            keywords: ['unblocked', 'classroom6x', 'classroom 6x', 'tyrone', '3kh0', '76', '66ez',
+                       '67', '999', '911', 'tbg95', 'shady-bears', 'school cheats', 'now.gg',
+                       'mills eagles', 'bypass', 'mirror', 'stealth']
+        },
+        {
+            folder: 'Games',
+            keywords: ['game', 'games', 'play', 'poki', 'crazygames', 'crazy games', 'y8', 'kizi',
+                       'friv', 'miniclip', 'addicting', 'coolmath', 'cool math', 'hooda', 'mathplayground',
+                       'math playground', 'gamedistribution', 'silvergames', 'kevin.games', 'kevin games',
+                       'gamemonetize', 'twoplayergames', 'gogy', 'littlegames', 'html5games', 'gamepix',
+                       'yandex', 'lagged', 'gamesgames', 'notdoppler', 'armorgames', 'armor games',
+                       'scratch.mit', 'playhop', 'wellgames', 'slope.run', 'retrobowl', '1v1.lol',
+                       'nasa', 'spaceplace', 'hoodamath', 'funbrain', 'abcya', 'pbskids', 'pbs kids']
+        },
+        {
+            folder: 'Movies',
+            keywords: ['movie', 'movies', 'film', 'cinema', 'netflix', 'hulu', 'disney+', 'disney plus',
+                       'primevideo', 'prime video', 'hbo', 'paramount+', 'peacock', 'tubi', 'pluto.tv',
+                       'crackle', 'fmovies', 'putlocker', '123movies', 'soap2day']
+        },
+        {
+            folder: 'TV / Streaming',
+            keywords: ['tv', 'stream', 'streaming', 'twitch', 'youtube', 'cbc gem', 'crunchyroll',
+                       'funimation', 'anime', 'episode', 'series', 'show']
+        },
+        {
+            folder: 'Music',
+            keywords: ['music', 'spotify', 'soundcloud', 'apple music', 'pandora', 'tidal', 'deezer',
+                       'audio', 'mp3', 'song', 'playlist', 'radio']
+        },
+        {
+            folder: 'Search',
+            keywords: ['search', 'startpage', 'duckduckgo', 'bing', 'google.com/search', 
+                       'wayback', 'web.archive', 'archive.org']
+        },
+        {
+            folder: 'Tools',
+            keywords: ['translator', 'translate', 'morsecode', 'morse', 'calculator', 'converter',
+                       'editor', 'compress', 'pdf', 'image to', 'tool', 'utility']
+        },
+        {
+            folder: 'School',
+            keywords: ['school', 'gnspes', 'ednet', 'classroom', 'edu', 'learning', 'homework',
+                       'assignment', 'class', 'student', 'teacher', 'prodigy', 'blooket', 'kahoot']
+        },
+        {
+            folder: 'Dev / Code',
+            keywords: ['github', 'gitlab', 'stackoverflow', 'stack overflow', 'codepen', 'replit',
+                       'jsfiddle', 'dev.to', 'mdn', 'mozilla.org', 'w3schools', 'firebase', 'vercel',
+                       'netlify', 'documentation', 'api', 'npm', 'code']
+        },
+        {
+            folder: 'Social',
+            keywords: ['discord', 'reddit', 'twitter', 'x.com', 'facebook', 'instagram', 'tiktok',
+                       'snapchat', 'whatsapp', 'telegram', 'mastodon', 'bluesky', 'tumblr']
+        }
     ];
 
     function loadTheme() {
@@ -787,7 +936,6 @@
         closeModals();
     };
 
-    // === FOLDER ORDERING ===
     function getOrderedFolderNames() {
         return [...new Set(links.map(l => l.folder).filter(Boolean))].sort((a, b) => {
             const orderA = folderData[a]?.order ?? 9999;
@@ -1189,6 +1337,183 @@
         } catch (err) { alert('Error: ' + err.message); }
     };
 
+    // === AUTO-SORT LOGIC ===
+    function suggestFolder(link) {
+        const haystack = [
+            link.name || '', link.url || '', link.note || '',
+            (link.tags || []).join(' ')
+        ].join(' ').toLowerCase();
+
+        for (const rule of SORT_RULES) {
+            for (const kw of rule.keywords) {
+                if (haystack.includes(kw.toLowerCase())) {
+                    return { folder: rule.folder, reason: `Matched keyword "${kw}"` };
+                }
+            }
+        }
+        return null;
+    }
+
+    window.openAutoSort = () => {
+        document.getElementById('autoSortModal').classList.add('active');
+        document.getElementById('autoSortContent').innerHTML = `<div class="loading">Analyzing your links...</div>`;
+        document.getElementById('applyAutoSortBtn').style.display = 'none';
+        
+        // Run analysis after a tiny delay so the loading shows
+        setTimeout(runAutoSort, 200);
+    };
+
+    function runAutoSort() {
+        autoSortSuggestions = [];
+        const existingFolders = new Set(links.map(l => l.folder).filter(Boolean));
+
+        links.forEach(link => {
+            const suggestion = suggestFolder(link);
+            if (!suggestion) return;
+            
+            const currentF = link.folder || '';
+            if (currentF === suggestion.folder) return; // already in right place
+            
+            autoSortSuggestions.push({
+                id: link.id,
+                name: link.name,
+                url: link.url,
+                from: currentF,
+                to: suggestion.folder,
+                reason: suggestion.reason,
+                isNewFolder: !existingFolders.has(suggestion.folder),
+                approved: true // selected by default
+            });
+        });
+
+        renderAutoSortUI();
+    }
+
+    function renderAutoSortUI() {
+        const container = document.getElementById('autoSortContent');
+        const applyBtn = document.getElementById('applyAutoSortBtn');
+
+        if (autoSortSuggestions.length === 0) {
+            container.innerHTML = `
+                <div class="auto-sort-summary">
+                    ✨ <strong>Everything looks organized!</strong> No suggestions found.
+                </div>
+                <div class="hint">
+                    Auto-Sort uses keyword rules (proxy → Proxies, game → Games, etc.) to suggest moves.
+                    If a link doesn't match any rule, it's left alone.
+                </div>
+            `;
+            applyBtn.style.display = 'none';
+            return;
+        }
+
+        // Group by destination folder
+        const byDest = {};
+        autoSortSuggestions.forEach(s => {
+            if (!byDest[s.to]) byDest[s.to] = [];
+            byDest[s.to].push(s);
+        });
+
+        const allFolders = [...new Set(links.map(l => l.folder).filter(Boolean))].sort();
+
+        let html = `
+            <div class="auto-sort-summary">
+                Found <strong style="color:var(--accent);">${autoSortSuggestions.length}</strong> suggestion${autoSortSuggestions.length === 1 ? '' : 's'} across <strong>${Object.keys(byDest).length}</strong> folder${Object.keys(byDest).length === 1 ? '' : 's'}.
+                <br><span style="font-size:0.75rem; color:var(--text-faint);">Uncheck any you don't want, or change the destination folder.</span>
+            </div>
+            <div style="display:flex; gap:0.5rem; margin-bottom:0.8rem;">
+                <button onclick="autoSortToggleAll(true)" style="font-size:0.75rem;">✓ Select All</button>
+                <button onclick="autoSortToggleAll(false)" style="font-size:0.75rem;">✕ Deselect All</button>
+            </div>
+        `;
+
+        Object.keys(byDest).sort().forEach(destFolder => {
+            const newBadge = byDest[destFolder][0].isNewFolder ? 
+                ` <span style="color:var(--accent2); font-size:0.7rem;">(new folder)</span>` : '';
+            html += `<div class="section-heading">→ ${escapeHtml(destFolder)}${newBadge}</div>`;
+            
+            byDest[destFolder].forEach(s => {
+                const safeId = s.id;
+                const fromText = s.from || '<em style="color:var(--text-faint);">Uncategorized</em>';
+                
+                const folderOptions = ['(Uncategorized)', ...allFolders, s.to]
+                    .filter((v, i, a) => a.indexOf(v) === i) // unique
+                    .map(f => {
+                        const val = f === '(Uncategorized)' ? '' : f;
+                        const selected = val === s.to ? 'selected' : '';
+                        return `<option value="${escapeHtml(val)}" ${selected}>${escapeHtml(f)}</option>`;
+                    }).join('');
+
+                html += `
+                    <div class="suggestion-card ${s.approved ? '' : 'skipped'}" id="sug-card-${safeId}">
+                        <input type="checkbox" class="suggestion-checkbox" 
+                               ${s.approved ? 'checked' : ''} 
+                               onchange="autoSortToggleOne('${safeId}', this.checked)">
+                        <div class="suggestion-info">
+                            <div class="suggestion-name">${escapeHtml(s.name)}</div>
+                            <div class="suggestion-move">
+                                <span class="suggestion-from">${fromText}</span>
+                                <span class="suggestion-arrow">→</span>
+                                <select class="suggestion-folder-select" onchange="autoSortChangeDest('${safeId}', this.value)">
+                                    ${folderOptions}
+                                </select>
+                            </div>
+                            <div class="suggestion-reason">${escapeHtml(s.reason)}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        container.innerHTML = html;
+        applyBtn.style.display = 'inline-block';
+    }
+
+    window.autoSortToggleOne = (id, checked) => {
+        const s = autoSortSuggestions.find(x => x.id === id);
+        if (s) s.approved = checked;
+        const card = document.getElementById(`sug-card-${id}`);
+        if (card) card.classList.toggle('skipped', !checked);
+    };
+
+    window.autoSortToggleAll = (state) => {
+        autoSortSuggestions.forEach(s => s.approved = state);
+        renderAutoSortUI();
+    };
+
+    window.autoSortChangeDest = (id, newDest) => {
+        const s = autoSortSuggestions.find(x => x.id === id);
+        if (s) s.to = newDest;
+    };
+
+    window.applyAutoSort = async () => {
+        const approved = autoSortSuggestions.filter(s => s.approved);
+        if (approved.length === 0) {
+            alert('No suggestions selected.');
+            return;
+        }
+        if (!confirm(`Move ${approved.length} link(s) to their suggested folders?`)) return;
+
+        const btn = document.getElementById('applyAutoSortBtn');
+        btn.disabled = true;
+        btn.textContent = 'Moving...';
+
+        try {
+            for (const s of approved) {
+                await updateDoc(doc(db, 'links', s.id), { folder: s.to });
+            }
+            await addLog('edited', `Auto-sorted ${approved.length} links`, '');
+            closeModals();
+            alert(`✅ Moved ${approved.length} link${approved.length === 1 ? '' : 's'}!`);
+        } catch (err) {
+            alert('Error: ' + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.textContent = 'Apply Selected Moves';
+        }
+    };
+
+    // === RENDER ===
     window.renderView = () => {
         const q = document.getElementById('searchInput').value.trim();
         const breadcrumbEl = document.getElementById('breadcrumbContainer');
