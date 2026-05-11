@@ -107,7 +107,6 @@
         .btn-warn { background: var(--danger); color: #fff; border: none; }
         .btn-warn:hover { background: #cc0000; }
 
-        /* SEARCH */
         .search-section {
             background: var(--bg-card); border: 1px solid var(--border);
             border-radius: 8px; padding: 0.8rem; margin-bottom: 1rem;
@@ -142,7 +141,6 @@
         .filter-chip:hover { border-color: var(--accent); }
         .filter-chip.active { background: var(--accent2); color: var(--bg); border-color: var(--accent2); }
 
-        /* BREADCRUMB */
         .breadcrumb {
             display: flex; align-items: center; gap: 0.5rem;
             margin-bottom: 1rem; font-size: 0.95rem;
@@ -157,7 +155,6 @@
         .breadcrumb-sep { color: var(--text-faint); }
         .breadcrumb-current { color: var(--text); font-weight: 600; }
 
-        /* FOLDER GRID (main view) */
         .folder-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -188,67 +185,58 @@
         .folder-tile.pinned-folder { border: 2px solid #ffd700; }
         .folder-tile.uncategorized-folder { border-style: dashed; opacity: 0.85; }
 
-        .folder-tile-icon {
-            font-size: 2.4rem;
-            line-height: 1;
-        }
-
+        .folder-tile-icon { font-size: 2.4rem; line-height: 1; }
         .folder-tile-name {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text);
-            word-break: break-word;
+            font-size: 1rem; font-weight: 600;
+            color: var(--text); word-break: break-word;
         }
-
         .folder-tile-count {
-            font-size: 0.75rem;
-            color: var(--text-dim);
+            font-size: 0.75rem; color: var(--text-dim);
             margin-top: auto;
         }
 
         .folder-tile-edit {
-            position: absolute;
-            top: 0.4rem;
-            right: 0.4rem;
-            font-size: 0.7rem;
-            padding: 0.2rem 0.4rem;
-            opacity: 0;
-            transition: opacity 0.2s;
+            position: absolute; top: 0.4rem; right: 0.4rem;
+            font-size: 0.7rem; padding: 0.2rem 0.4rem;
+            opacity: 0; transition: opacity 0.2s;
         }
 
-        .folder-tile:hover .folder-tile-edit { opacity: 1; }
+        .folder-tile:hover .folder-tile-edit,
+        .folder-tile:hover .folder-tile-move { opacity: 1; }
+
+        .folder-tile-move {
+            position: absolute; top: 0.4rem; left: 0.4rem;
+            display: flex; flex-direction: column; gap: 0.15rem;
+            opacity: 0; transition: opacity 0.2s;
+        }
+        .folder-tile-move button {
+            padding: 0.05rem 0.35rem; font-size: 0.7rem; line-height: 1;
+            background: var(--bg); border: 1px solid var(--border-hover);
+        }
+        .folder-tile-move button:hover { background: var(--accent); color: var(--bg); }
+
+        .folder-tile.dragging { opacity: 0.4; transform: scale(0.95); }
+        .folder-tile.drag-over {
+            border-color: var(--accent) !important;
+            border-style: dashed; background: var(--border);
+        }
 
         .section-heading {
-            font-size: 0.85rem;
-            color: var(--accent2);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.6rem;
-            margin-top: 1.2rem;
-            padding-left: 0.3rem;
+            font-size: 0.85rem; color: var(--accent2);
+            text-transform: uppercase; letter-spacing: 1px;
+            margin-bottom: 0.6rem; margin-top: 1.2rem; padding-left: 0.3rem;
         }
-
         .section-heading:first-child { margin-top: 0; }
 
-        /* SEARCH RESULTS GROUP */
-        .search-group {
-            margin-bottom: 1.2rem;
-        }
-
+        .search-group { margin-bottom: 1.2rem; }
         .search-group-header {
-            font-size: 0.85rem;
-            color: var(--text);
-            margin-bottom: 0.4rem;
-            padding: 0.3rem 0.5rem;
-            background: var(--bg-card);
-            border-radius: 6px;
+            font-size: 0.85rem; color: var(--text);
+            margin-bottom: 0.4rem; padding: 0.3rem 0.5rem;
+            background: var(--bg-card); border-radius: 6px;
             border-left: 3px solid var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
+            display: flex; align-items: center; gap: 0.4rem;
         }
 
-        /* BULK */
         .bulk-bar {
             display: none; position: sticky; top: 0;
             background: var(--border); border: 1px solid var(--accent2);
@@ -258,7 +246,6 @@
         .bulk-bar.active { display: flex; }
         .bulk-count { color: var(--accent); font-weight: bold; font-size: 0.9rem; margin-right: auto; }
 
-        /* LINK CARDS */
         .link-card {
             display: flex; align-items: center; gap: 0.6rem;
             background: var(--bg-card); border: 1px solid var(--border);
@@ -269,10 +256,7 @@
         .link-card.pinned { border-left: 3px solid var(--accent2); }
         .link-card.selected { background: var(--border); border-color: var(--accent); }
 
-        .link-checkbox {
-            width: 16px; height: 16px; cursor: pointer;
-            accent-color: var(--accent); flex-shrink: 0;
-        }
+        .link-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); flex-shrink: 0; }
         .link-favicon { width: 20px; height: 20px; border-radius: 4px; flex-shrink: 0; }
         .link-info { flex: 1; min-width: 0; }
         .link-name {
@@ -325,7 +309,6 @@
         .hidden { display: none !important; }
         .loading { text-align: center; color: var(--text-faint); padding: 2rem; }
 
-        /* LOG */
         .log-entry {
             padding: 0.5rem 0.7rem; background: var(--bg-input);
             border-left: 3px solid var(--border); border-radius: 4px;
@@ -342,7 +325,6 @@
 
         .hint { font-size: 0.7rem; color: var(--text-faint); margin-top: 0.3rem; }
 
-        /* COLOR PICKER */
         .color-grid {
             display: grid; grid-template-columns: repeat(8, 1fr);
             gap: 0.4rem; margin-top: 0.3rem;
@@ -354,7 +336,6 @@
         .color-swatch:hover { transform: scale(1.1); }
         .color-swatch.selected { border-color: #fff; }
 
-        /* ICON PICKER */
         .icon-grid {
             display: grid; grid-template-columns: repeat(8, 1fr);
             gap: 0.4rem; margin-top: 0.3rem;
@@ -375,7 +356,6 @@
         }
         .duplicate-warning.active { display: block; }
 
-        /* THEME PICKER */
         .theme-grid {
             display: grid; grid-template-columns: repeat(2, 1fr);
             gap: 0.6rem; margin-top: 0.5rem;
@@ -476,7 +456,6 @@
     </div>
 </div>
 
-<!-- ADD/EDIT MODAL -->
 <div class="modal-overlay" id="singleModal">
     <div class="modal">
         <h2 id="singleModalTitle">Add a Link</h2>
@@ -500,7 +479,6 @@
     </div>
 </div>
 
-<!-- MASS ADD MODAL -->
 <div class="modal-overlay" id="massModal">
     <div class="modal">
         <h2>Mass Add Links</h2>
@@ -519,7 +497,6 @@
     </div>
 </div>
 
-<!-- LOG MODAL -->
 <div class="modal-overlay" id="logModal">
     <div class="modal">
         <h2>📜 Activity Log <span style="color:var(--text-faint); font-size:0.75rem; font-weight:normal;">(last 7 days)</span></h2>
@@ -530,17 +507,13 @@
     </div>
 </div>
 
-<!-- FOLDER CUSTOMIZE MODAL -->
 <div class="modal-overlay" id="folderCustomizeModal">
     <div class="modal">
         <h2>📁 Customize: <span id="folderCustomizeName" style="color:#fff;"></span></h2>
-        
         <label>🎭 Icon</label>
         <div class="icon-grid" id="iconGrid"></div>
-
         <label style="margin-top:1rem;">🎨 Color</label>
         <div class="color-grid" id="colorGrid"></div>
-
         <div class="modal-buttons">
             <button onclick="closeModals()">Cancel</button>
             <button class="btn-save" onclick="saveFolderCustomization()">Save</button>
@@ -548,7 +521,6 @@
     </div>
 </div>
 
-<!-- SETTINGS MODAL -->
 <div class="modal-overlay" id="settingsModal">
     <div class="modal">
         <h2>⚙️ Settings</h2>
@@ -594,7 +566,7 @@
 
     let links = [];
     let logs = [];
-    let folderData = {}; // { folderName: { color, icon } }
+    let folderData = {};
     let currentUser = null;
     let activeTag = '';
     let selectMode = false;
@@ -602,7 +574,8 @@
     let folderEditTarget = '';
     let pendingColor = '';
     let pendingIcon = '';
-    let currentFolder = null; // null = main view, 'PINNED' = pinned view, 'UNCATEGORIZED' = uncat, else folder name
+    let currentFolder = null;
+    let draggedFolder = null;
 
     const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -629,7 +602,6 @@
         { id: 'midnight',   name: '🌙 Midnight Purple',  colors: ['#0a0a14', '#aa88ff', '#66ddff', '#ff5588'] }
     ];
 
-    // === THEME ===
     function loadTheme() {
         const saved = localStorage.getItem('linkVaultTheme') || 'neon';
         document.documentElement.setAttribute('data-theme', saved);
@@ -654,7 +626,6 @@
     }
     loadTheme();
 
-    // === BOOKMARKLET ===
     function setupBookmarklet() {
         const vaultURL = window.location.origin + window.location.pathname;
         const code = `javascript:(function(){var u=encodeURIComponent(location.href);var t=encodeURIComponent(document.title);window.open('${vaultURL}?addUrl='+u+'&addName='+t,'_blank');})();`;
@@ -681,7 +652,6 @@
         }
     }
 
-    // === AUTH ===
     window.signIn = async () => {
         try { await signInWithPopup(auth, provider); }
         catch (err) { document.getElementById('loginError').textContent = err.message; }
@@ -707,7 +677,6 @@
         }
     });
 
-    // === LOGS ===
     async function addLog(action, linkName, linkUrl) {
         try {
             await addDoc(collection(db, 'logs'), {
@@ -752,7 +721,6 @@
         return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
-    // === FOLDERS ===
     function listenToFolders() {
         onSnapshot(collection(db, 'folders'), snapshot => {
             folderData = {};
@@ -808,15 +776,101 @@
     window.saveFolderCustomization = async () => {
         if (folderEditTarget) {
             try {
+                const existing = folderData[folderEditTarget] || {};
                 await setDoc(doc(db, 'folders', folderEditTarget), { 
-                    color: pendingColor, icon: pendingIcon 
+                    color: pendingColor, 
+                    icon: pendingIcon,
+                    order: existing.order ?? 9999
                 });
             } catch (err) { alert('Error: ' + err.message); }
         }
         closeModals();
     };
 
-    // === DUPLICATES ===
+    // === FOLDER ORDERING ===
+    function getOrderedFolderNames() {
+        return [...new Set(links.map(l => l.folder).filter(Boolean))].sort((a, b) => {
+            const orderA = folderData[a]?.order ?? 9999;
+            const orderB = folderData[b]?.order ?? 9999;
+            if (orderA !== orderB) return orderA - orderB;
+            return a.localeCompare(b);
+        });
+    }
+
+    async function saveFolderOrder(orderedList) {
+        try {
+            await Promise.all(orderedList.map((f, i) => {
+                const existing = folderData[f] || {};
+                return setDoc(doc(db, 'folders', f), { 
+                    color: existing.color || '',
+                    icon: existing.icon || '📁',
+                    order: i 
+                });
+            }));
+        } catch (err) { alert('Error: ' + err.message); }
+    }
+
+    window.moveFolder = async (folder, direction) => {
+        const ordered = getOrderedFolderNames();
+        const idx = ordered.indexOf(folder);
+        const newIdx = idx + direction;
+        if (newIdx < 0 || newIdx >= ordered.length) return;
+        [ordered[idx], ordered[newIdx]] = [ordered[newIdx], ordered[idx]];
+        await saveFolderOrder(ordered);
+    };
+
+    window.handleDragStart = (e) => {
+        const tile = e.target.closest('.folder-tile');
+        if (!tile || tile.classList.contains('pinned-folder') || tile.classList.contains('uncategorized-folder')) {
+            e.preventDefault();
+            return;
+        }
+        draggedFolder = tile.dataset.folder;
+        tile.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    };
+
+    window.handleDragOver = (e) => {
+        e.preventDefault();
+        const tile = e.target.closest('.folder-tile');
+        if (!tile || tile.classList.contains('pinned-folder') || tile.classList.contains('uncategorized-folder')) return;
+        if (tile.dataset.folder === draggedFolder) return;
+        tile.classList.add('drag-over');
+        e.dataTransfer.dropEffect = 'move';
+    };
+
+    window.handleDragLeave = (e) => {
+        const tile = e.target.closest('.folder-tile');
+        if (tile) tile.classList.remove('drag-over');
+    };
+
+    window.handleDrop = async (e) => {
+        e.preventDefault();
+        const tile = e.target.closest('.folder-tile');
+        if (!tile) return;
+        tile.classList.remove('drag-over');
+        const targetFolder = tile.dataset.folder;
+        if (!draggedFolder || !targetFolder || draggedFolder === targetFolder) return;
+        if (tile.classList.contains('pinned-folder') || tile.classList.contains('uncategorized-folder')) return;
+
+        const ordered = getOrderedFolderNames();
+        const fromIdx = ordered.indexOf(draggedFolder);
+        const toIdx = ordered.indexOf(targetFolder);
+        if (fromIdx === -1 || toIdx === -1) return;
+
+        ordered.splice(fromIdx, 1);
+        ordered.splice(toIdx, 0, draggedFolder);
+
+        await saveFolderOrder(ordered);
+    };
+
+    window.handleDragEnd = (e) => {
+        document.querySelectorAll('.folder-tile').forEach(t => {
+            t.classList.remove('dragging', 'drag-over');
+        });
+        draggedFolder = null;
+    };
+
     function normalizeUrl(url) {
         try {
             const u = new URL(ensureProtocol(url));
@@ -839,7 +893,6 @@
         } else { warningEl.classList.remove('active'); }
     };
 
-    // === FUZZY SEARCH ===
     function fuzzyMatch(query, text) {
         if (!query) return true;
         query = query.toLowerCase(); text = text.toLowerCase();
@@ -856,7 +909,6 @@
         return fields.some(f => fuzzyMatch(q, f));
     }
 
-    // === LINKS ===
     function listenToLinks() {
         onSnapshot(query(collection(db, 'links'), orderBy('created', 'desc')), snapshot => {
             links = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -912,7 +964,6 @@
             } else {
                 titleEl.textContent = 'Add a Link';
                 document.getElementById('editingId').value = '';
-                // Pre-fill folder if we're inside one
                 if (currentFolder && currentFolder !== 'PINNED' && currentFolder !== 'UNCATEGORIZED') {
                     document.getElementById('linkFolder').value = currentFolder;
                 }
@@ -1030,7 +1081,6 @@
         renderView();
     };
 
-    // === NAVIGATION ===
     window.openFolder = (folder) => {
         currentFolder = folder;
         document.getElementById('searchInput').value = '';
@@ -1045,7 +1095,6 @@
         window.scrollTo(0, 0);
     };
 
-    // BULK
     window.toggleSelectMode = () => {
         selectMode = !selectMode;
         selectedIds.clear();
@@ -1075,7 +1124,6 @@
             if (!matchesSearch(l, q)) return false;
             if (userFilter && l.addedBy !== userFilter) return false;
             if (activeTag && !(l.tags || []).includes(activeTag)) return false;
-            // Folder context
             if (currentFolder === 'PINNED') { if (!l.pinned) return false; }
             else if (currentFolder === 'UNCATEGORIZED') { if (l.folder) return false; }
             else if (currentFolder) { if (l.folder !== currentFolder) return false; }
@@ -1141,13 +1189,11 @@
         } catch (err) { alert('Error: ' + err.message); }
     };
 
-    // === MAIN RENDER ===
     window.renderView = () => {
         const q = document.getElementById('searchInput').value.trim();
         const breadcrumbEl = document.getElementById('breadcrumbContainer');
         const container = document.getElementById('mainContainer');
 
-        // Active tag chip
         const tagFilterEl = document.getElementById('activeTagFilter');
         if (activeTag) {
             tagFilterEl.innerHTML = `<div style="margin-top:0.5rem;">
@@ -1157,7 +1203,6 @@
             </div>`;
         } else { tagFilterEl.innerHTML = ''; }
 
-        // === SEARCH MODE — overrides everything ===
         if (q) {
             breadcrumbEl.innerHTML = `<div class="breadcrumb">
                 <a class="breadcrumb-link" onclick="goHome()">🏠 Home</a>
@@ -1168,7 +1213,6 @@
             return;
         }
 
-        // === FOLDER VIEW ===
         if (currentFolder) {
             renderInsideFolder(container, breadcrumbEl);
         } else {
@@ -1181,8 +1225,7 @@
             <span class="breadcrumb-current">🏠 Home</span>
         </div>`;
 
-        // Build folder list
-        const folderMap = {}; // folderName -> link count
+        const folderMap = {};
         let pinnedCount = 0;
         let uncategorizedCount = 0;
 
@@ -1194,10 +1237,8 @@
             }
         });
 
-        let html = '';
         const tiles = [];
 
-        // Pinned auto-folder (only if there are pins)
         if (pinnedCount > 0) {
             tiles.push(`
                 <div class="folder-tile pinned-folder" onclick="openFolder('PINNED')">
@@ -1208,17 +1249,33 @@
             `);
         }
 
-        // User-created folders
-        const folderNames = Object.keys(folderMap).sort();
-        folderNames.forEach(folder => {
+        const folderNames = getOrderedFolderNames();
+
+        folderNames.forEach((folder, idx) => {
             const data = folderData[folder] || {};
             const icon = data.icon || '📁';
             const color = data.color || '';
             const colorStyle = color ? `style="border-color:${color};"` : '';
             const iconStyle = color ? `style="color:${color};"` : '';
+            const safeFolder = escapeHtml(folder).replace(/'/g, "\\'");
+            const isFirst = idx === 0;
+            const isLast = idx === folderNames.length - 1;
             tiles.push(`
-                <div class="folder-tile" ${colorStyle} onclick="openFolder('${escapeHtml(folder).replace(/'/g, "\\'")}')">
-                    <button class="folder-tile-edit" onclick="event.stopPropagation(); openFolderCustomize('${escapeHtml(folder).replace(/'/g, "\\'")}')">🎨</button>
+                <div class="folder-tile" 
+                     ${colorStyle} 
+                     draggable="true"
+                     data-folder="${escapeHtml(folder)}"
+                     ondragstart="handleDragStart(event)"
+                     ondragover="handleDragOver(event)"
+                     ondragleave="handleDragLeave(event)"
+                     ondrop="handleDrop(event)"
+                     ondragend="handleDragEnd(event)"
+                     onclick="openFolder('${safeFolder}')">
+                    <div class="folder-tile-move" onclick="event.stopPropagation();">
+                        <button onclick="moveFolder('${safeFolder}', -1)" ${isFirst ? 'disabled style="opacity:0.3;"' : ''} title="Move up">▲</button>
+                        <button onclick="moveFolder('${safeFolder}', 1)" ${isLast ? 'disabled style="opacity:0.3;"' : ''} title="Move down">▼</button>
+                    </div>
+                    <button class="folder-tile-edit" onclick="event.stopPropagation(); openFolderCustomize('${safeFolder}')">🎨</button>
                     <div class="folder-tile-icon" ${iconStyle}>${icon}</div>
                     <div class="folder-tile-name">${escapeHtml(folder)}</div>
                     <div class="folder-tile-count">${folderMap[folder]} link${folderMap[folder] === 1 ? '' : 's'}</div>
@@ -1226,7 +1283,6 @@
             `);
         });
 
-        // Uncategorized auto-folder
         if (uncategorizedCount > 0) {
             tiles.push(`
                 <div class="folder-tile uncategorized-folder" onclick="openFolder('UNCATEGORIZED')">
@@ -1242,8 +1298,7 @@
             return;
         }
 
-        html += `<div class="folder-grid">${tiles.join('')}</div>`;
-        container.innerHTML = html;
+        container.innerHTML = `<div class="folder-grid">${tiles.join('')}</div>`;
     }
 
     function renderInsideFolder(container, breadcrumbEl) {
@@ -1297,7 +1352,6 @@
             return;
         }
 
-        // Inside a folder, show pinned first then unpinned (unless we ARE in pinned)
         let html = '';
         if (currentFolder === 'PINNED' || currentFolder === 'UNCATEGORIZED') {
             filtered.forEach(l => html += cardHTML(l));
@@ -1340,7 +1394,6 @@
             return;
         }
 
-        // Group by folder (Pinned first, then folders, then Uncategorized)
         const groups = {};
         const pinnedGroup = [];
         const uncatGroup = [];
@@ -1439,7 +1492,6 @@
             document.getElementById('searchInput').focus();
         }
         if (e.key === 'Escape') {
-            // If modal open, close it. Otherwise go home.
             const anyModalOpen = document.querySelector('.modal-overlay.active');
             if (anyModalOpen) window.closeModals();
             else if (currentFolder) window.goHome();
